@@ -1,5 +1,9 @@
 {
-  "name": "Strategic Operations Platform",
-  "description": "Unified PMO and Tech-Ops dashboard with AI-driven insights and health scoring.",
-  "requestFramePermissions": []
+  "name": "Venture-OS",
+  "description": "A unified professional ecosystem integrating B-Stage (Identity), MPO Pilot (Operations), and Tech-Ops (Infrastructure).",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
 }

@@ -18,10 +18,16 @@ export const metadata: Metadata = {
   description: 'Unified PMO and Tech-Ops dashboard with AI-driven insights and health scoring.',
 };
 
+import { SupabaseProvider } from '@/components/supabase-provider';
+
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
-      <body className="antialiased" suppressHydrationWarning>{children}</body>
+      <body className="antialiased" suppressHydrationWarning>
+        <SupabaseProvider>
+          {children}
+        </SupabaseProvider>
+      </body>
     </html>
   );
 }
