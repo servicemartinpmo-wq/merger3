@@ -1,5 +1,5 @@
 {
-  "name": "Command Center by Martin PMO-Ops",
-  "description": "Command Center by Martin PMO-Ops: The Data Operating System powered by Apphia, the thinking engine.",
-  "requestFramePermissions": ["camera", "microphone", "geolocation"]
+  "name": "Next.js Starter",
+  "description": "A clean Next.js application with Tailwind CSS and Motion.",
+  "requestFramePermissions": []
 }
