@@ -1,8 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Palette, User, Building, Briefcase, HeartPulse, Rocket } from 'lucide-react';
-import type { IndustryMode } from './lockscreen-banner';
+import { Palette, User, Building, Briefcase, HeartPulse, Rocket, ChevronDown } from 'lucide-react';
+import { IndustryMode } from '@/lib/types/pmo';
 
 interface IndustryModeSwitcherProps {
   currentMode: IndustryMode;
@@ -19,37 +19,20 @@ const modes: { id: IndustryMode; label: string; icon: any }[] = [
 ];
 
 export function IndustryModeSwitcher({ currentMode, onModeChange }: IndustryModeSwitcherProps) {
+  const activeMode = modes.find(m => m.id === currentMode);
+  const Icon = activeMode?.icon;
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-sm">
-      <span className="text-xs font-mono uppercase tracking-widest text-slate-400 mr-2">Switch Industry Mode</span>
-      <div className="flex flex-wrap gap-1">
-        {modes.map((mode) => {
-          const Icon = mode.icon;
-          const isActive = currentMode === mode.id;
-          return (
-            <button
-              key={mode.id}
-              onClick={() => onModeChange(mode.id)}
-              className={`relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                isActive 
-                  ? 'text-slate-900' 
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
-              }`}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="active-mode"
-                  className="absolute inset-0 bg-white shadow-sm border border-slate-200 rounded-xl"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <span className="relative z-10 flex items-center gap-2">
-                <Icon size={14} />
-                {mode.label}
-              </span>
-            </button>
-          );
-        })}
+    <div className="flex items-center justify-between p-2 bg-white/5 rounded-xl border border-white/10">
+      <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">Mode</span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-medium text-white flex items-center gap-2">
+          {Icon && <Icon size={14} />}
+          {activeMode?.label}
+        </span>
+        <button className="text-slate-500 hover:text-white">
+          <ChevronDown size={14} />
+        </button>
       </div>
     </div>
   );

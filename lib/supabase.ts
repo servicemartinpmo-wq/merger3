@@ -14,6 +14,4 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
-const supabase = createClient(clientUrl, clientKey);
-
-export default supabase;
+export const supabase = createClient(clientUrl, clientKey);

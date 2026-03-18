@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { GoogleGenAI } from '@google/genai';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, 
@@ -15,6 +16,9 @@ import {
   AlertCircle,
   Loader2
 } from 'lucide-react';
+import { BackgroundCollage } from './background-collage';
+import { AnimatedBorder } from './animated-border';
+import { BannerImage } from './banner-image';
 
 interface OnboardingProps {
   onComplete: (data: any) => void;
@@ -24,6 +28,7 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: '',
+    websiteUrl: '',
     industry: '',
     teamSize: '',
     goals: [] as string[],
@@ -31,7 +36,35 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
     documents: [] as { name: string, type: string }[],
     diagnosticReport: null as any
   });
+  const [isAutoFilling, setIsAutoFilling] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+
+  const autoFillFromWebsite = async () => {
+    if (!formData.websiteUrl) return;
+    setIsAutoFilling(true);
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY! });
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Analyze the website ${formData.websiteUrl} and provide the company name and industry. Return the result as JSON with fields: companyName, industry.`,
+        config: {
+          tools: [{urlContext: {}}],
+          responseMimeType: "application/json",
+        },
+      });
+      
+      const data = JSON.parse(response.text || '{}');
+      setFormData(prev => ({
+        ...prev,
+        companyName: data.companyName || prev.companyName,
+        industry: data.industry || prev.industry
+      }));
+    } catch (error) {
+      console.error("Auto-fill failed", error);
+    } finally {
+      setIsAutoFilling(false);
+    }
+  };
 
   const totalSteps = 6;
 
@@ -78,11 +111,12 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] bg-[#F5F2ED] flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 overflow-y-auto">
+      <BackgroundCollage />
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-2xl bg-white rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-200 overflow-hidden"
+        className="w-full max-w-2xl bg-white rounded-[32px] shadow-2xl shadow-slate-900/10 border border-slate-200 overflow-hidden laminated-surface"
       >
         {/* Progress Bar */}
         <div className="h-1.5 w-full bg-slate-100 flex">
@@ -107,39 +141,61 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-8"
               >
-                <div className="space-y-2">
+                <BannerImage title="Tell us about your venture" />
+                <div className="space-y-2 p-8">
                   <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-6">
                     <Building2 size={24} />
                   </div>
-                  <h2 className="text-3xl font-serif font-medium tracking-tight">Tell us about your venture</h2>
+                  <h2 className="text-3xl font-serif font-medium tracking-tight text-slate-950">Tell us about your venture</h2>
                   <p className="text-slate-500">Let&apos;s start with the basics to customize your OS experience.</p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="space-y-2">
+                    <label className="text-xs font-mono uppercase tracking-widest text-slate-400">Founder Name</label>
+                    <AnimatedBorder className="w-full" isActive={!!formData.companyName}>
+                      <input 
+                        type="text"
+                        value={formData.companyName}
+                        onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                        placeholder="e.g. Jane Doe"
+                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all text-slate-950"
+                      />
+                    </AnimatedBorder>
+                  </div>
+                  <div className="space-y-2">
                     <label className="text-xs font-mono uppercase tracking-widest text-slate-400">Company Name</label>
-                    <input 
-                      type="text"
-                      value={formData.companyName}
-                      onChange={(e) => setFormData({...formData, companyName: e.target.value})}
-                      placeholder="e.g. Acme Corp"
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all"
-                    />
+                    <AnimatedBorder className="w-full" isActive={!!formData.industry}>
+                      <input 
+                        type="text"
+                        value={formData.industry}
+                        onChange={(e) => setFormData({...formData, industry: e.target.value})}
+                        placeholder="e.g. Acme Corp"
+                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all text-slate-950"
+                      />
+                    </AnimatedBorder>
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-mono uppercase tracking-widest text-slate-400">Industry Sector</label>
-                    <select 
-                      value={formData.industry}
-                      onChange={(e) => setFormData({...formData, industry: e.target.value})}
-                      className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all appearance-none"
-                    >
-                      <option value="">Select Industry</option>
-                      <option value="tech">Technology & SaaS</option>
-                      <option value="creative">Creative Agency</option>
-                      <option value="ecommerce">E-commerce</option>
-                      <option value="finance">Fintech & Finance</option>
-                      <option value="healthcare">Healthcare</option>
-                    </select>
+                    <AnimatedBorder className="w-full" isActive={!!formData.industry}>
+                      <select 
+                        value={formData.industry}
+                        onChange={(e) => setFormData({...formData, industry: e.target.value})}
+                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all appearance-none text-slate-950"
+                      >
+                        <option value="">Select Industry</option>
+                        <option value="tech">Technology & SaaS</option>
+                        <option value="creative">Creative Agency</option>
+                        <option value="ecommerce">E-commerce</option>
+                        <option value="finance">Fintech & Finance</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="retail">Retail</option>
+                        <option value="energy">Energy & Utilities</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </AnimatedBorder>
                   </div>
                 </div>
               </motion.div>
@@ -153,11 +209,12 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-8"
               >
-                <div className="space-y-2">
+                <BannerImage title="Scale your team" />
+                <div className="space-y-2 p-8">
                   <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-6">
                     <Users2 size={24} />
                   </div>
-                  <h2 className="text-3xl font-serif font-medium tracking-tight">Scale of operations</h2>
+                  <h2 className="text-3xl font-serif font-medium tracking-tight text-slate-950">Scale of operations</h2>
                   <p className="text-slate-500">How many people are powering this venture?</p>
                 </div>
 
@@ -168,20 +225,21 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                     { id: '11-50', label: 'Growth Stage', desc: '11-50 people' },
                     { id: '50+', label: 'Enterprise', desc: '50+ people' }
                   ].map((size) => (
-                    <button
-                      key={size.id}
-                      onClick={() => setFormData({...formData, teamSize: size.id})}
-                      className={`p-6 rounded-2xl border text-left transition-all ${
-                        formData.teamSize === size.id 
-                          ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-900/20' 
-                          : 'bg-slate-50 border-slate-200 text-slate-900 hover:border-slate-400'
-                      }`}
-                    >
-                      <div className="font-bold text-lg">{size.label}</div>
-                      <div className={`text-sm ${formData.teamSize === size.id ? 'text-slate-400' : 'text-slate-500'}`}>
-                        {size.desc}
-                      </div>
-                    </button>
+                    <AnimatedBorder key={size.id} className="w-full" isActive={formData.teamSize === size.id}>
+                      <button
+                        onClick={() => setFormData({...formData, teamSize: size.id})}
+                        className={`w-full p-6 rounded-2xl border text-left transition-all ${
+                          formData.teamSize === size.id 
+                            ? 'bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-900/20' 
+                            : 'bg-slate-50 border-slate-200 text-slate-900 hover:border-slate-400'
+                        }`}
+                      >
+                        <div className="font-bold text-lg">{size.label}</div>
+                        <div className={`text-sm ${formData.teamSize === size.id ? 'text-slate-400' : 'text-slate-500'}`}>
+                          {size.desc}
+                        </div>
+                      </button>
+                    </AnimatedBorder>
                   ))}
                 </div>
               </motion.div>
@@ -195,11 +253,12 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-8"
               >
-                <div className="space-y-2">
+                <BannerImage title="Primary objectives" />
+                <div className="space-y-2 p-8">
                   <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-6">
                     <Target size={24} />
                   </div>
-                  <h2 className="text-3xl font-serif font-medium tracking-tight">Primary objectives</h2>
+                  <h2 className="text-3xl font-serif font-medium tracking-tight text-slate-950">Primary objectives</h2>
                   <p className="text-slate-500">Select what you want to optimize first.</p>
                 </div>
 
@@ -212,18 +271,19 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                     'Financial Intelligence',
                     'Customer Experience'
                   ].map((goal) => (
-                    <button
-                      key={goal}
-                      onClick={() => toggleGoal(goal)}
-                      className={`px-6 py-4 rounded-2xl border flex items-center justify-between transition-all ${
-                        formData.goals.includes(goal)
-                          ? 'bg-slate-900 border-slate-900 text-white'
-                          : 'bg-slate-50 border-slate-200 text-slate-900 hover:border-slate-400'
-                      }`}
-                    >
-                      <span className="font-medium text-sm">{goal}</span>
-                      {formData.goals.includes(goal) && <CheckCircle2 size={16} />}
-                    </button>
+                    <AnimatedBorder key={goal} className="w-full" isActive={formData.goals.includes(goal)}>
+                      <button
+                        onClick={() => toggleGoal(goal)}
+                        className={`w-full px-6 py-4 rounded-2xl border flex items-center justify-between transition-all ${
+                          formData.goals.includes(goal)
+                            ? 'bg-slate-900 border-slate-900 text-white'
+                            : 'bg-slate-50 border-slate-200 text-slate-900 hover:border-slate-400'
+                        }`}
+                      >
+                        <span className="font-medium text-sm">{goal}</span>
+                        {formData.goals.includes(goal) && <CheckCircle2 size={16} />}
+                      </button>
+                    </AnimatedBorder>
                   ))}
                 </div>
               </motion.div>
@@ -237,34 +297,38 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-8"
               >
-                <div className="space-y-2">
+                <BannerImage title="Knowledge Base" />
+                <div className="space-y-2 p-8">
                   <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center mb-6">
                     <Sparkles size={24} />
                   </div>
-                  <h2 className="text-3xl font-serif font-medium tracking-tight">Knowledge Base</h2>
-                  <p className="text-slate-500">Upload SOPs, framework documents, or knowledge bases for AI diagnostic analysis.</p>
+                  <h2 className="text-3xl font-serif font-medium tracking-tight text-slate-950">SOPs or documents to share</h2>
+                  <p className="text-slate-500">Upload SOPs, framework documents, or documents to share for diagnostic analysis.</p>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center hover:border-slate-400 transition-all cursor-pointer bg-slate-50 group">
-                    <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <Rocket size={24} className="text-slate-400" />
+                  <AnimatedBorder className="w-full" isActive={formData.documents.length > 0}>
+                    <div className="border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center hover:border-slate-400 transition-all cursor-pointer bg-slate-50 group" onClick={() => document.getElementById('file-upload')?.click()}>
+                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <Rocket size={24} className="text-slate-400" />
+                      </div>
+                      <p className="text-sm font-medium text-slate-900">Click to upload or drag and drop</p>
+                      <p className="text-xs text-slate-500 mt-1">PDF, DOCX, TXT (Max 10MB)</p>
+                      <input 
+                        id="file-upload"
+                        type="file" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            setFormData(prev => ({
+                              ...prev,
+                              documents: [...prev.documents, { name: e.target.files![0].name, type: e.target.files![0].type }]
+                            }));
+                          }
+                        }}
+                      />
                     </div>
-                    <p className="text-sm font-medium text-slate-900">Click to upload or drag and drop</p>
-                    <p className="text-xs text-slate-500 mt-1">PDF, DOCX, TXT (Max 10MB)</p>
-                    <input 
-                      type="file" 
-                      className="hidden" 
-                      onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                          setFormData(prev => ({
-                            ...prev,
-                            documents: [...prev.documents, { name: e.target.files![0].name, type: e.target.files![0].type }]
-                          }));
-                        }
-                      }}
-                    />
-                  </div>
+                  </AnimatedBorder>
 
                   {formData.documents.length > 0 && (
                     <div className="space-y-2">
@@ -298,7 +362,7 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                   <div className="w-12 h-12 rounded-2xl bg-teal-500 text-white flex items-center justify-center mb-6">
                     <AlertCircle size={24} />
                   </div>
-                  <h2 className="text-3xl font-serif font-medium tracking-tight">AI Diagnostic Report</h2>
+                  <h2 className="text-3xl font-serif font-medium tracking-tight text-slate-950">Diagnostic Report</h2>
                   <p className="text-slate-500">We&apos;ve analyzed your inputs and knowledge base to identify strategic opportunities.</p>
                 </div>
 
@@ -313,7 +377,7 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                       <div className="absolute top-0 right-0 p-8 opacity-10"><Sparkles size={100} /></div>
                       <div className="relative z-10">
                         <div className="flex items-center justify-between mb-6">
-                          <span className="text-xs font-mono uppercase tracking-widest text-teal-400">Readiness Score</span>
+                          <span className="text-xs font-mono uppercase tracking-widest text-teal-400">Operational/Organizational Health</span>
                           <span className="text-4xl font-serif font-bold text-teal-400">{formData.diagnosticReport.score}%</span>
                         </div>
                         <p className="text-lg font-serif italic text-teal-50/80 leading-relaxed mb-4">
@@ -359,7 +423,7 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                   <div className="w-20 h-20 rounded-3xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-emerald-500/20">
                     <Rocket size={40} className="animate-bounce" />
                   </div>
-                  <h2 className="text-4xl font-serif font-medium tracking-tight">Ready for liftoff</h2>
+                  <h2 className="text-4xl font-serif font-medium tracking-tight text-slate-950">Ready for liftoff</h2>
                   <p className="text-slate-500 max-w-md mx-auto">
                     We&apos;ve configured your Venture-OS environment based on your inputs. Welcome to the future of operations.
                   </p>

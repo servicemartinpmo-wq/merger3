@@ -16,68 +16,55 @@ import {
   Mail,
   Calendar,
   Cloud,
-  ShieldCheck
+  ShieldCheck,
+  Palette,
+  FileText,
+  BarChart2,
+  Users,
+  Briefcase,
+  Lock
 } from 'lucide-react';
 
 const integrations = [
-  { 
-    id: 'slack', 
-    name: 'Slack', 
-    category: 'Communication', 
-    status: 'Connected', 
-    desc: 'Sync notifications and command Venture-OS via Slack channels.',
-    icon: MessageSquare,
-    color: 'bg-purple-50 text-purple-600'
-  },
-  { 
-    id: 'stripe', 
-    name: 'Stripe', 
-    category: 'Finance', 
-    status: 'Connected', 
-    desc: 'Real-time revenue tracking and automated invoice generation.',
-    icon: Zap,
-    color: 'bg-indigo-50 text-indigo-600'
-  },
-  { 
-    id: 'hubspot', 
-    name: 'HubSpot', 
-    category: 'CRM', 
-    status: 'Disconnected', 
-    desc: 'Sync leads, contacts and pipeline data with Venture-OS CRM.',
-    icon: Database,
-    color: 'bg-orange-50 text-orange-600'
-  },
-  { 
-    id: 'google', 
-    name: 'Google Workspace', 
-    category: 'Productivity', 
-    status: 'Connected', 
-    desc: 'Sync calendars, emails and drive documents for AI analysis.',
-    icon: Mail,
-    color: 'bg-blue-50 text-blue-600'
-  },
-  { 
-    id: 'github', 
-    name: 'GitHub', 
-    category: 'Development', 
-    status: 'Connected', 
-    desc: 'Monitor repository health and automate deployment workflows.',
-    icon: Globe,
-    color: 'bg-slate-900 text-white'
-  },
-  { 
-    id: 'aws', 
-    name: 'AWS', 
-    category: 'Infrastructure', 
-    status: 'Disconnected', 
-    desc: 'Monitor cloud infrastructure and automate scaling operations.',
-    icon: Cloud,
-    color: 'bg-amber-50 text-amber-600'
-  },
+  { id: 'slack', name: 'Slack', category: 'Communication', status: 'Connected', desc: 'Sync notifications and command Venture-OS.', icon: MessageSquare, color: 'bg-purple-50 text-purple-600' },
+  { id: 'google', name: 'Google Workspace', category: 'Productivity', status: 'Connected', desc: 'Sync calendars, emails and drive documents.', icon: Mail, color: 'bg-blue-50 text-blue-600' },
+  { id: 'jira', name: 'Jira', category: 'Project Management', status: 'Disconnected', desc: 'Sync issues and sprints.', icon: CheckCircle2, color: 'bg-blue-50 text-blue-600' },
+  { id: 'asana', name: 'Asana', category: 'Project Management', status: 'Disconnected', desc: 'Manage project tasks.', icon: CheckCircle2, color: 'bg-rose-50 text-rose-600' },
+  { id: 'trello', name: 'Trello', category: 'Project Management', status: 'Disconnected', desc: 'Sync Kanban boards.', icon: CheckCircle2, color: 'bg-blue-50 text-blue-600' },
+  { id: 'ms-project', name: 'MS Project', category: 'Project Management', status: 'Disconnected', desc: 'Sync project timelines.', icon: Calendar, color: 'bg-blue-50 text-blue-600' },
+  { id: 'clickup', name: 'Click-Up', category: 'Project Management', status: 'Disconnected', desc: 'Sync tasks and docs.', icon: CheckCircle2, color: 'bg-purple-50 text-purple-600' },
+  { id: 'tableau', name: 'Tableau', category: 'Data', status: 'Disconnected', desc: 'Visualize data insights.', icon: BarChart2, color: 'bg-blue-50 text-blue-600' },
+  { id: 'monday', name: 'Monday', category: 'Project Management', status: 'Disconnected', desc: 'Sync team workflows.', icon: CheckCircle2, color: 'bg-red-50 text-red-600' },
+  { id: 'ga', name: 'Google Analytics', category: 'Data', status: 'Disconnected', desc: 'Track website traffic.', icon: BarChart2, color: 'bg-orange-50 text-orange-600' },
+  { id: 'squarespace', name: 'SquareSpace', category: 'Web', status: 'Disconnected', desc: 'Manage website content.', icon: Globe, color: 'bg-black text-white' },
+  { id: 'wix', name: 'Wix', category: 'Web', status: 'Disconnected', desc: 'Manage website content.', icon: Globe, color: 'bg-blue-50 text-blue-600' },
+  { id: 'wordpress', name: 'Wordpress', category: 'Web', status: 'Disconnected', desc: 'Manage website content.', icon: Globe, color: 'bg-blue-50 text-blue-600' },
+  { id: 'canva', name: 'Canva', category: 'Creative', status: 'Disconnected', desc: 'Design assets.', icon: Palette, color: 'bg-cyan-50 text-cyan-600' },
+  { id: 'hootsuite', name: 'Hootsuite', category: 'Marketing', status: 'Disconnected', desc: 'Manage social media.', icon: Zap, color: 'bg-blue-50 text-blue-600' },
+  { id: 'hubspot', name: 'HubSpot', category: 'CRM', status: 'Disconnected', desc: 'Sync CRM data.', icon: Database, color: 'bg-orange-50 text-orange-600' },
+  { id: 'mailchimp', name: 'Mailchimp', category: 'Marketing', status: 'Disconnected', desc: 'Manage email campaigns.', icon: Mail, color: 'bg-yellow-50 text-yellow-600' },
+  { id: 'activecampaign', name: 'Active Campaign', category: 'Marketing', status: 'Disconnected', desc: 'Automate marketing.', icon: Mail, color: 'bg-blue-50 text-blue-600' },
+  { id: 'docusign', name: 'DocuSign', category: 'Legal', status: 'Disconnected', desc: 'Manage e-signatures.', icon: FileText, color: 'bg-blue-50 text-blue-600' },
+  { id: 'office365', name: 'Microsoft Office 365', category: 'Productivity', status: 'Disconnected', desc: 'Sync Office docs.', icon: Mail, color: 'bg-red-50 text-red-600' },
+  { id: 'salesforce', name: 'Salesforce', category: 'CRM', status: 'Disconnected', desc: 'Sync CRM data.', icon: Database, color: 'bg-blue-50 text-blue-600' },
+  { id: 'sap-concur', name: 'SAP Concur', category: 'Finance', status: 'Disconnected', desc: 'Manage expenses.', icon: Briefcase, color: 'bg-blue-50 text-blue-600' },
+  { id: 'navan', name: 'Navan', category: 'Finance', status: 'Disconnected', desc: 'Manage travel/expenses.', icon: Briefcase, color: 'bg-blue-50 text-blue-600' },
+  { id: 'expensify', name: 'Expensify', category: 'Finance', status: 'Disconnected', desc: 'Manage expenses.', icon: Briefcase, color: 'bg-green-50 text-green-600' },
+  { id: 'zendesk', name: 'ZenDesk', category: 'Support', status: 'Disconnected', desc: 'Manage support tickets.', icon: MessageSquare, color: 'bg-green-50 text-green-600' },
+  { id: 'okta', name: 'Okta', category: 'Security', status: 'Disconnected', desc: 'Manage identity.', icon: Lock, color: 'bg-blue-50 text-blue-600' },
+  { id: 'adobe', name: 'Adobe', category: 'Creative', status: 'Disconnected', desc: 'Creative suite.', icon: Palette, color: 'bg-red-50 text-red-600' },
 ];
 
 export function IntegrationsView() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const filteredIntegrations = integrations.filter(app => {
+    const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          app.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = activeFilter === 'All' || app.category === activeFilter;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="space-y-8">
@@ -103,9 +90,15 @@ export function IntegrationsView() {
             className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900/5 transition-all"
           />
         </div>
-        <div className="flex gap-2">
-          {['All', 'Connected', 'Productivity', 'Finance'].map((filter) => (
-            <button key={filter} className="px-6 py-4 bg-white border border-slate-200 rounded-2xl text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all">
+        <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+          {['All', ...Array.from(new Set(integrations.map(i => i.category)))].map((filter) => (
+            <button 
+              key={filter} 
+              onClick={() => setActiveFilter(filter)}
+              className={`px-6 py-4 bg-white border rounded-2xl text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
+                activeFilter === filter ? 'border-slate-900 text-slate-900' : 'border-slate-200 text-slate-500 hover:text-slate-900'
+              }`}
+            >
               {filter}
             </button>
           ))}
@@ -113,7 +106,7 @@ export function IntegrationsView() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {integrations.map((app) => (
+        {filteredIntegrations.map((app) => (
           <motion.div
             key={app.id}
             whileHover={{ y: -4 }}

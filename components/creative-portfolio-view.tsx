@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, 
@@ -23,7 +24,7 @@ const portfolioItems = [
     id: 1, 
     title: 'Abstract Motion Study', 
     category: 'Motion Design', 
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000',
+    image: 'https://picsum.photos/seed/motion/1000/1200',
     likes: 124,
     views: '1.2k',
     type: 'video'
@@ -32,7 +33,7 @@ const portfolioItems = [
     id: 2, 
     title: 'Branding for EcoFlow', 
     category: 'Identity', 
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000',
+    image: 'https://picsum.photos/seed/branding/1000/1200',
     likes: 89,
     views: '840',
     type: 'image'
@@ -41,7 +42,7 @@ const portfolioItems = [
     id: 3, 
     title: 'Future Systems UI', 
     category: 'UI/UX', 
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1000',
+    image: 'https://picsum.photos/seed/ui/1000/1200',
     likes: 256,
     views: '3.4k',
     type: 'image'
@@ -50,7 +51,7 @@ const portfolioItems = [
     id: 4, 
     title: 'Urban Architecture', 
     category: 'Photography', 
-    image: 'https://images.unsplash.com/photo-1449156001935-d2863fb22690?auto=format&fit=crop&q=80&w=1000',
+    image: 'https://picsum.photos/seed/architecture/1000/1200',
     likes: 67,
     views: '520',
     type: 'image'
@@ -59,7 +60,7 @@ const portfolioItems = [
     id: 5, 
     title: 'Cyberpunk Editorial', 
     category: '3D Art', 
-    image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=1000',
+    image: 'https://picsum.photos/seed/cyberpunk/1000/1200',
     likes: 412,
     views: '5.1k',
     type: 'video'
@@ -68,7 +69,7 @@ const portfolioItems = [
     id: 6, 
     title: 'Minimalist Interior', 
     category: 'ArchViz', 
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1000',
+    image: 'https://picsum.photos/seed/interior/1000/1200',
     likes: 156,
     views: '1.1k',
     type: 'image'
@@ -139,9 +140,10 @@ export function CreativePortfolioView() {
             className="group cursor-pointer space-y-4"
           >
             <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden bg-slate-100">
-              <img 
+              <Image 
                 src={item.image} 
                 alt={item.title} 
+                fill
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 referrerPolicy="no-referrer"
               />
@@ -194,9 +196,10 @@ export function CreativePortfolioView() {
 
             <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
               <div className="lg:col-span-2 relative aspect-[16/10] rounded-[48px] overflow-hidden shadow-2xl">
-                <img 
+                <Image 
                   src={selectedItem.image} 
                   alt={selectedItem.title} 
+                  fill
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />

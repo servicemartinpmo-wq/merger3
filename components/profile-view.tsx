@@ -23,7 +23,8 @@ import {
   LogIn
 } from 'lucide-react';
 import { useSupabase } from '@/components/supabase-provider';
-import supabase from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { EmptyState } from '@/components/empty-state';
 
 interface TeamMember {
   id: string;
@@ -87,7 +88,10 @@ export function ProfileView() {
         <header className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white shadow-lg">
-              {menuItems.find(i => i.id === activeSection)?.icon({ size: 20 })}
+              {(() => {
+                const ActiveIcon = menuItems.find(i => i.id === activeSection)?.icon;
+                return ActiveIcon ? <ActiveIcon size={20} /> : null;
+              })()}
             </div>
             <div>
               <h1 className="text-xl font-serif font-medium">{menuItems.find(i => i.id === activeSection)?.label}</h1>
@@ -277,51 +281,61 @@ export function ProfileView() {
                   )}
                 </div>
 
-                <div className="border border-slate-200 rounded-2xl overflow-hidden">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="bg-slate-50 border-b border-slate-200">
-                      <tr>
-                        <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Member</th>
-                        <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Role</th>
-                        <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Status</th>
-                        {isEditing && <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Actions</th>}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {team.map((member) => (
-                        <tr key={member.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">
-                                {member.name.split(' ').map(n => n[0]).join('')}
-                              </div>
-                              <div>
-                                <p className="text-sm font-medium">{member.name}</p>
-                                <p className="text-xs text-slate-400">{member.email}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <span className="text-xs font-medium px-2 py-1 bg-slate-100 rounded-md">{member.role}</span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-2">
-                              <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'active' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                              <span className="text-xs capitalize">{member.status}</span>
-                            </div>
-                          </td>
-                          {isEditing && (
-                            <td className="px-6 py-4">
-                              <button className="p-2 text-slate-400 hover:text-rose-500 transition-colors">
-                                <Trash2 size={16} />
-                              </button>
-                            </td>
-                          )}
+                {team.length > 0 ? (
+                  <div className="border border-slate-200 rounded-2xl overflow-hidden">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                          <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Member</th>
+                          <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Role</th>
+                          <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Status</th>
+                          {isEditing && <th className="px-6 py-4 text-[10px] font-mono uppercase tracking-widest text-slate-400">Actions</th>}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {team.map((member) => (
+                          <tr key={member.id} className="hover:bg-slate-50/50 transition-colors">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">
+                                  {member.name.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium">{member.name}</p>
+                                  <p className="text-xs text-slate-400">{member.email}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="text-xs font-medium px-2 py-1 bg-slate-100 rounded-md">{member.role}</span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                <span className={`w-1.5 h-1.5 rounded-full ${member.status === 'active' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                                <span className="text-xs capitalize">{member.status}</span>
+                              </div>
+                            </td>
+                            {isEditing && (
+                              <td className="px-6 py-4">
+                                <button className="p-2 text-slate-400 hover:text-rose-500 transition-colors">
+                                  <Trash2 size={16} />
+                                </button>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <EmptyState 
+                    icon={Users}
+                    title="No Team Members"
+                    description="It looks like you haven't added any team members yet. Invite your team to start collaborating."
+                    imageUrl="https://picsum.photos/seed/tech-team/800/600?blur=10"
+                    action={{ label: 'Invite Member', onClick: () => {} }}
+                  />
+                )}
               </motion.div>
             )}
 
@@ -431,30 +445,13 @@ export function ProfileView() {
                 exit={{ opacity: 0, x: -20 }}
                 className="space-y-6"
               >
-                <div className="space-y-4">
-                  {[
-                    { date: '2026-03-17 13:45', user: 'Alex Rivera', action: 'Updated Branding Colors', icon: Palette },
-                    { date: '2026-03-16 09:12', user: 'System', action: 'Automated Security Audit Completed', icon: Shield },
-                    { date: '2026-03-15 16:30', user: 'Sarah Chen', action: 'Added 2 New Team Members', icon: Users },
-                    { date: '2026-03-14 11:05', user: 'Alex Rivera', action: 'Modified Workspace Settings', icon: Settings2 },
-                  ].map((log, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
-                      <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
-                          <log.icon size={16} />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">{log.action}</p>
-                          <p className="text-xs text-slate-400">{log.user} • {log.date}</p>
-                        </div>
-                      </div>
-                      <ChevronRight size={16} className="text-slate-300" />
-                    </div>
-                  ))}
-                </div>
-                <button className="w-full py-3 border border-dashed border-slate-200 rounded-xl text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">
-                  Load More Logs
-                </button>
+                {/* History list would be here, assuming an empty state for now */}
+                <EmptyState 
+                  icon={History}
+                  title="No System History"
+                  description="There are no system events to display yet. As you use Venture-OS, your activity logs will appear here."
+                  imageUrl="https://picsum.photos/seed/tech-history/800/600?blur=10"
+                />
               </motion.div>
             )}
           </AnimatePresence>

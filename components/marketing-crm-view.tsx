@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, 
@@ -31,6 +32,7 @@ import {
   Pie,
   Cell
 } from 'recharts';
+import { statusConfig } from '@/lib/status-colors';
 
 const performanceData = [
   { name: 'Jan', score: 65, growth: 12 },
@@ -42,10 +44,10 @@ const performanceData = [
 ];
 
 const leads = [
-  { id: 1, name: 'Sarah Jenkins', company: 'Global Tech', value: '$12,500', status: 'Hot', lastContact: '2h ago', avatar: 'https://picsum.photos/seed/sarah/100/100' },
-  { id: 2, name: 'Michael Chen', company: 'Innovate AI', value: '$8,200', status: 'Warm', lastContact: '5h ago', avatar: 'https://picsum.photos/seed/michael/100/100' },
-  { id: 3, name: 'Emma Wilson', company: 'Design Co', value: '$15,000', status: 'In Progress', lastContact: '1d ago', avatar: 'https://picsum.photos/seed/emma/100/100' },
-  { id: 4, name: 'David Ross', company: 'Future Systems', value: '$4,500', status: 'Cold', lastContact: '3d ago', avatar: 'https://picsum.photos/seed/david/100/100' },
+  { id: 1, name: 'Sarah Jenkins', company: 'Global Tech', value: '$12,500', status: 'needs-attention', lastContact: '2h ago', avatar: 'https://picsum.photos/seed/sarah/100/100' },
+  { id: 2, name: 'Michael Chen', company: 'Innovate AI', value: '$8,200', status: 'in_progress', lastContact: '5h ago', avatar: 'https://picsum.photos/seed/michael/100/100' },
+  { id: 3, name: 'Emma Wilson', company: 'Design Co', value: '$15,000', status: 'in_progress', lastContact: '1d ago', avatar: 'https://picsum.photos/seed/emma/100/100' },
+  { id: 4, name: 'David Ross', company: 'Future Systems', value: '$4,500', status: 'pending', lastContact: '3d ago', avatar: 'https://picsum.photos/seed/david/100/100' },
 ];
 
 export function MarketingCrmView() {
@@ -254,19 +256,16 @@ export function MarketingCrmView() {
                     <tr key={lead.id} className="hover:bg-slate-50/50 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <img src={lead.avatar} alt="" className="w-10 h-10 rounded-xl object-cover border border-slate-200" />
+                          <Image src={lead.avatar} alt={lead.name} width={40} height={40} className="w-10 h-10 rounded-xl object-cover border border-slate-200" referrerPolicy="no-referrer" />
                           <div className="font-medium text-slate-900">{lead.name}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">{lead.company}</td>
                       <td className="px-6 py-4 font-mono text-sm font-bold text-slate-900">{lead.value}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${
-                          lead.status === 'Hot' ? 'bg-rose-50 text-rose-600 border border-rose-100' :
-                          lead.status === 'Warm' ? 'bg-amber-50 text-amber-600 border border-amber-100' :
-                          'bg-slate-50 text-slate-600 border border-slate-100'
-                        }`}>
-                          {lead.status}
+                        <span className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${statusConfig[lead.status as keyof typeof statusConfig]?.border} ${statusConfig[lead.status as keyof typeof statusConfig]?.text}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${statusConfig[lead.status as keyof typeof statusConfig]?.color}`} />
+                          {statusConfig[lead.status as keyof typeof statusConfig]?.label}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-500">{lead.lastContact}</td>

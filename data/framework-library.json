@@ -1,0 +1,121 @@
+{
+  "frameworks": [
+    {
+      "name": "Balanced Scorecard",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Dashboard", "Reports"],
+      "statusRelevance": "All",
+      "temporalContext": "Monthly / Quarterly",
+      "dependencies": ["OKR Alignment"],
+      "notes": "Past KPIs inform priority scoring"
+    },
+    {
+      "name": "OKR Alignment",
+      "executionModule": "Initiatives",
+      "outputsTo": ["Dashboard", "Reports"],
+      "statusRelevance": "All",
+      "temporalContext": "Quarterly",
+      "dependencies": ["Balanced Scorecard"],
+      "notes": "Past OKR success/failure informs strategic advice"
+    },
+    {
+      "name": "Strategic Choice Cascade",
+      "executionModule": "Advisory",
+      "outputsTo": ["Initiatives"],
+      "statusRelevance": "New",
+      "temporalContext": "Annual",
+      "dependencies": ["OKR Alignment"],
+      "notes": "Strategic choices inform initiative prioritization"
+    },
+    {
+      "name": "Hoshin Kanri",
+      "executionModule": "Systems",
+      "outputsTo": ["Initiatives", "Departments"],
+      "statusRelevance": "All",
+      "temporalContext": "Annual",
+      "dependencies": ["Balanced Scorecard"],
+      "notes": "Policy deployment across the organization"
+    },
+    {
+      "name": "McKinsey 7S",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Departments"],
+      "statusRelevance": "Ongoing",
+      "temporalContext": "Periodic",
+      "dependencies": ["Galbraith Star Model"],
+      "notes": "Organizational alignment assessment"
+    },
+    {
+      "name": "Galbraith Star Model",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Departments"],
+      "statusRelevance": "Ongoing",
+      "temporalContext": "Periodic",
+      "dependencies": ["McKinsey 7S"],
+      "notes": "Design framework for organizational effectiveness"
+    },
+    {
+      "name": "VRIO",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Initiatives"],
+      "statusRelevance": "New",
+      "temporalContext": "Annual",
+      "dependencies": ["SWOT Analysis"],
+      "notes": "Assessment of competitive advantage"
+    },
+    {
+      "name": "SWOT Analysis",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Initiatives"],
+      "statusRelevance": "New",
+      "temporalContext": "Annual",
+      "dependencies": ["VRIO"],
+      "notes": "Prior SWOTs inform recommendations"
+    },
+    {
+      "name": "PESTEL Analysis",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Advisory"],
+      "statusRelevance": "New",
+      "temporalContext": "Annual",
+      "dependencies": ["Porter Five Forces"],
+      "notes": "Macro-environmental analysis"
+    },
+    {
+      "name": "Porter Five Forces",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Advisory"],
+      "statusRelevance": "New",
+      "temporalContext": "Annual",
+      "dependencies": ["PESTEL Analysis"],
+      "notes": "Industry competitive analysis"
+    },
+    {
+      "name": "Blue Ocean Strategy",
+      "executionModule": "Advisory",
+      "outputsTo": ["Initiatives"],
+      "statusRelevance": "New",
+      "temporalContext": "Annual",
+      "dependencies": ["SWOT Analysis"],
+      "notes": "Creating uncontested market space"
+    },
+    {
+      "name": "BCG Growth Share Matrix",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Initiatives"],
+      "statusRelevance": "Ongoing",
+      "temporalContext": "Annual",
+      "dependencies": ["GE McKinsey Matrix"],
+      "notes": "Portfolio management"
+    },
+    {
+      "name": "GE McKinsey Matrix",
+      "executionModule": "Diagnostics",
+      "outputsTo": ["Initiatives"],
+      "statusRelevance": "Ongoing",
+      "temporalContext": "Annual",
+      "dependencies": ["BCG Growth Share Matrix"],
+      "notes": "Portfolio management"
+    }
+  ]
+}

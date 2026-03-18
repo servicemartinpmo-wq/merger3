@@ -1,2 +1,66 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
+:root {
+  --bg-color: #020617; /* Slate 950 */
+  --card-color: #0f172a; /* Slate 900 */
+  --border-color: rgba(255, 255, 255, 0.15);
+  --accent-color: #60a5fa; /* Blue 400 */
+}
+
+@theme {
+  --color-showroom-bg: var(--bg-color);
+  --color-showroom-card: var(--card-color);
+  --color-showroom-border: var(--border-color);
+  --color-showroom-accent: var(--accent-color);
+  
+  --font-display: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-showroom-bg text-slate-100 antialiased;
+  }
+}
+
+@layer utilities {
+  .laminated-surface {
+    @apply bg-showroom-card border border-showroom-border;
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    border-radius: 24px;
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+  }
+  
+  .embossed-surface {
+    @apply bg-slate-100/50 border border-slate-200/50;
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+    background-image: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0) 100%);
+  }
+  
+  .glass-reflection {
+    @apply relative overflow-hidden;
+  }
+  
+  .glass-reflection::after {
+    content: '';
+    @apply absolute inset-0 pointer-events-none;
+    background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.2) 45%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.2) 55%, transparent 60%);
+    transform: translateX(-100%);
+    animation: reflection 8s infinite;
+  }
+  
+  @keyframes reflection {
+    0% { transform: translateX(-100%); }
+    20% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+  }
+}
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }

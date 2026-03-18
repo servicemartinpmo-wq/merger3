@@ -1,9 +1,5 @@
 {
-  "name": "Venture-OS",
-  "description": "A unified professional ecosystem integrating B-Stage (Identity), MPO Pilot (Operations), and Tech-Ops (Infrastructure).",
-  "requestFramePermissions": [
-    "camera",
-    "microphone",
-    "geolocation"
-  ]
+  "name": "Apphia",
+  "description": "Apphia: The Data Operating System for PMO-Ops Command Centers.",
+  "requestFramePermissions": ["camera", "microphone", "geolocation"]
 }

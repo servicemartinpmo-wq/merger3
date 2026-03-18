@@ -1,0 +1,29 @@
+{
+  "taglines": [
+    "Clarity in Command. Structure in Execution.",
+    "The Operations Command Center for Leaders.",
+    "Know What Matters. Act with Confidence.",
+    "Your Operations, Architected.",
+    "The Support Structure for Your Ambition.",
+    "Heavy Lifting, Handled. Leadership, Elevated.",
+    "From Inbox to Impact.",
+    "Operations, Simplified. Results, Accelerated.",
+    "Where Strategy Meets Execution."
+  ],
+  "pricingTiers": {
+    "free": { "name": "Personal Command View", "price": 0 },
+    "professional": { "name": "Professional Operator", "price": 30 },
+    "builder": { "name": "Workflow Builder", "price": 50 },
+    "flagship": { "name": "Command Center", "price": 150 },
+    "enterprise": { "name": "Enterprise", "price": 2000 }
+  },
+  "uiGuidelines": {
+    "navigation": "Left navigation: nested hierarchy (Russian nesting doll)",
+    "statusColors": {
+      "outstanding": "purple",
+      "needsAttention": "orange",
+      "onTrack": "yellow",
+      "abandoned": "red"
+    }
+  }
+}

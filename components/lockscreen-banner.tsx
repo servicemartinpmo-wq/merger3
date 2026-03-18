@@ -1,9 +1,9 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
-
-export type IndustryMode = 'creative' | 'freelancer' | 'SMB' | 'executive' | 'healthcare' | 'start-up';
+import { IndustryMode } from '@/lib/types/pmo';
 
 interface LockscreenBannerProps {
   mode: IndustryMode;
@@ -49,9 +49,10 @@ export function LockscreenBanner({ mode }: LockscreenBannerProps) {
           transition={{ duration: 1.2, ease: 'easeOut' }}
           className="absolute inset-0"
         >
-          <img
+          <Image
             src={images[mode]}
             alt={mode}
+            fill
             className="h-full w-full object-cover"
             referrerPolicy="no-referrer"
           />

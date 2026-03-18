@@ -26,11 +26,14 @@ import {
   MoreVertical,
   ArrowUpRight,
   ArrowDownRight,
-  Plus
+  Plus,
+  Globe,
+  MessageSquare
 } from 'lucide-react';
+import { TechSupportChat } from '@/components/tech-support-chat';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { GoogleGenAI, Type } from '@google/genai';
-import supabase from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { useSupabase } from '@/components/supabase-provider';
 
 const mockAlgoData = [
@@ -129,7 +132,7 @@ export function TechOpsView() {
       setNewTicket({ subject: '', priority: 'medium' });
     }
   };
-  const [activeTab, setActiveTab] = useState<'monitor' | 'service' | 'infrastructure' | 'appmaker' | 'autonomous'>('monitor');
+  const [activeTab, setActiveTab] = useState<'monitor' | 'service' | 'infrastructure' | 'appmaker' | 'autonomous' | 'support'>('monitor');
   const [appDescription, setAppDescription] = useState('');
   const [generatedApp, setGeneratedApp] = useState<{
     name: string;
@@ -363,9 +366,9 @@ export function TechOpsView() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-[#0A0A0A] rounded-3xl shadow-sm border border-white/10">
-        <div className="flex flex-col items-center gap-4 text-gray-400">
-          <Loader2 size={32} className="animate-spin text-[#00FF00]" />
+      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] rounded-3xl laminated-surface border border-white/10">
+        <div className="flex flex-col items-center gap-4 text-slate-400">
+          <Loader2 size={32} className="animate-spin text-showroom-accent" />
           <p className="font-mono text-xs uppercase tracking-widest">Initializing Tech-Ops Command Engine...</p>
         </div>
       </div>
@@ -373,30 +376,30 @@ export function TechOpsView() {
   }
 
   return (
-    <div className="space-y-8 font-sans text-white bg-[#0A0A0A] p-8 rounded-[2.5rem] border border-white/5">
+    <div className="space-y-8 font-sans text-slate-900 min-h-[calc(100vh-8rem)] p-10 rounded-3xl laminated-surface glass-reflection border border-black/10">
       {/* Header Section */}
-      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-        <div className="space-y-2">
+      <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 border-b border-black/5 pb-10">
+        <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00FF00]/10 border border-[#00FF00]/20 flex items-center justify-center">
-              <Terminal className="text-[#00FF00]" size={20} />
+            <div className="w-12 h-12 rounded-2xl bg-showroom-accent/10 border border-showroom-accent/20 flex items-center justify-center">
+              <Terminal className="text-showroom-accent" size={24} />
             </div>
-            <h1 className="text-3xl font-serif font-medium tracking-tight">Tech-Ops Command</h1>
+            <h1 className="text-4xl font-display font-light tracking-tight text-slate-900">Tech-Ops Command</h1>
           </div>
-          <p className="text-gray-500 max-w-xl text-sm leading-relaxed">
+          <p className="text-slate-600 max-w-xl text-base leading-relaxed font-light">
             Real-time monitoring of infrastructure signals, support tickets, and system health.
           </p>
         </div>
         
-        <div className="flex items-center gap-4">
-          <div className="flex -space-x-2">
+        <div className="flex items-center gap-6">
+          <div className="flex -space-x-3">
             {mockAgents.map((agent, i) => (
-              <div key={i} className={`w-8 h-8 rounded-full border-2 border-[#0A0A0A] flex items-center justify-center text-[10px] font-bold ${agent.status === 'active' ? 'bg-emerald-500' : 'bg-slate-700'}`}>
+              <div key={i} className={`w-10 h-10 rounded-full border-2 border-slate-100 flex items-center justify-center text-[10px] font-bold shadow-sm ${agent.status === 'active' ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-slate-600'}`}>
                 {agent.name.charAt(0)}
               </div>
             ))}
           </div>
-          <div className="h-8 w-px bg-white/10" />
+          <div className="h-10 w-px bg-black/10" />
           <div className="flex items-center gap-3">
             <StatusBadge status="operational" label="Cloud Infrastructure" />
             <StatusBadge status="operational" label="Database Cluster" />
@@ -405,19 +408,20 @@ export function TechOpsView() {
       </header>
 
       {/* Navigation Tabs */}
-      <div className="flex gap-1 p-1 bg-white/5 rounded-2xl border border-white/10 w-fit">
+      <div className="flex gap-1 p-1.5 bg-black/5 rounded-2xl border border-black/10 w-fit glass-reflection">
         {[
           { id: 'monitor', label: 'System Monitor', icon: Activity },
           { id: 'service', label: 'Service Desk', icon: Ticket },
           { id: 'infrastructure', label: 'Infrastructure', icon: Server },
           { id: 'appmaker', label: 'App Maker', icon: Zap },
           { id: 'autonomous', label: 'Autonomous Fixes', icon: ShieldAlert },
+          { id: 'support', label: 'Tech Support', icon: MessageSquare },
         ].map((tab) => (
           <button 
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${
-              activeTab === tab.id ? 'bg-white text-black' : 'text-gray-500 hover:text-white'
+            className={`px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2.5 ${
+              activeTab === tab.id ? 'bg-showroom-accent text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-black/5'
             }`}
           >
             <tab.icon size={14} />
@@ -437,67 +441,67 @@ export function TechOpsView() {
           >
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <StatCard label="System Health" value="99.98%" trend="+0.02%" icon={Activity} color="text-emerald-500" />
-              <StatCard label="Active Tickets" value={tickets.length.toString()} trend="-2" icon={Ticket} color="text-blue-500" />
-              <StatCard label="Avg. Response" value="14m" trend="-3m" icon={Clock} color="text-purple-500" />
-              <StatCard label="SLA Compliance" value="98.5%" trend="+1.2%" icon={CheckCircle2} color="text-amber-500" />
+              <StatCard label="System Health" value="99.98%" trend="+0.02%" icon={Activity} color="text-emerald-600" />
+              <StatCard label="Active Tickets" value={tickets.length.toString()} trend="-2" icon={Ticket} color="text-showroom-accent" />
+              <StatCard label="Avg. Response" value="14m" trend="-3m" icon={Clock} color="text-purple-600" />
+              <StatCard label="SLA Compliance" value="98.5%" trend="+1.2%" icon={CheckCircle2} color="text-amber-600" />
             </div>
 
             {/* Main Monitor Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Score Card */}
-              <div className="bg-[#151619] border border-white/10 rounded-3xl p-8 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-[#00FF00]/5 rounded-full blur-[80px] -mr-20 -mt-20" />
+              <div className="bg-white border border-black/10 rounded-3xl p-10 relative overflow-hidden group laminated-surface glass-reflection">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-showroom-accent/5 rounded-full blur-[100px] -mr-32 -mt-32" />
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-8">
-                    <span className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">Algorithm Score</span>
-                    <span className="px-2 py-1 bg-[#00FF00]/10 border border-[#00FF00]/20 rounded text-[10px] font-mono text-[#00FF00]">LIVE</span>
+                  <div className="flex items-center justify-between mb-10">
+                    <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em]">Algorithm Score</span>
+                    <span className="px-3 py-1 bg-showroom-accent/10 border border-showroom-accent/20 rounded-full text-[10px] font-mono text-showroom-accent font-bold">LIVE</span>
                   </div>
-                  <div className="flex items-baseline gap-2 mb-10">
-                    <span className="text-8xl font-serif font-medium tracking-tighter">{currentScore.score}</span>
-                    <span className="text-2xl text-[#00FF00] font-mono">.{currentScore.decimal}</span>
+                  <div className="flex items-baseline gap-3 mb-12">
+                    <span className="text-9xl font-display font-light tracking-tighter text-slate-900">{currentScore.score}</span>
+                    <span className="text-3xl text-showroom-accent font-mono font-light">.{currentScore.decimal}</span>
                   </div>
-                  <div className="space-y-5">
-                    <ScoreBar label="Efficiency" value={currentScore.efficiency} color="bg-[#00FF00]" />
-                    <ScoreBar label="Relevance" value={currentScore.relevance} color="bg-blue-500" />
+                  <div className="space-y-6">
+                    <ScoreBar label="Efficiency" value={currentScore.efficiency} color="bg-showroom-accent" />
+                    <ScoreBar label="Relevance" value={currentScore.relevance} color="bg-emerald-500" />
                     <ScoreBar label="Freshness" value={currentScore.freshness} color="bg-purple-500" />
                   </div>
                 </div>
               </div>
 
               {/* Chart */}
-              <div className="lg:col-span-2 bg-[#151619] border border-white/10 rounded-3xl p-8">
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-sm font-mono font-bold text-gray-500 uppercase tracking-widest">Performance History</h3>
-                  <div className="flex gap-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-[#00FF00]" />
-                      <span className="text-[10px] font-mono text-gray-400">Score</span>
+              <div className="lg:col-span-2 bg-white border border-black/10 rounded-3xl p-10 laminated-surface glass-reflection">
+                <div className="flex items-center justify-between mb-10">
+                  <h3 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em]">Performance History</h3>
+                  <div className="flex gap-6">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-showroom-accent" />
+                      <span className="text-[10px] font-mono text-slate-600 uppercase tracking-widest">Score</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-blue-500" />
-                      <span className="text-[10px] font-mono text-gray-400">Engagement</span>
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                      <span className="text-[10px] font-mono text-slate-600 uppercase tracking-widest">Engagement</span>
                     </div>
                   </div>
                 </div>
-                <div className="h-[300px]">
+                <div className="h-[320px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={algoData}>
                       <defs>
                         <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#00FF00" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="#00FF00" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#0f766e" stopOpacity={0.2}/>
+                          <stop offset="95%" stopColor="#0f766e" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" />
-                      <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#555', fontSize: 10, fontFamily: 'monospace' }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#555', fontSize: 10, fontFamily: 'monospace' }} domain={[60, 100]} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                      <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 10, fontFamily: 'monospace', fontWeight: 300 }} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 10, fontFamily: 'monospace', fontWeight: 300 }} domain={[60, 100]} />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: '#151619', border: '1px solid #333', borderRadius: '12px', fontSize: '12px' }}
-                        itemStyle={{ color: '#fff' }}
+                        contentStyle={{ backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', fontSize: '10px', boxShadow: '0 10px 20px rgba(0,0,0,0.1)', fontFamily: 'monospace' }}
+                        itemStyle={{ color: '#0f172a' }}
                       />
-                      <Area type="monotone" dataKey="score" stroke="#00FF00" fillOpacity={1} fill="url(#colorScore)" strokeWidth={3} />
-                      <Area type="monotone" dataKey="engagement" stroke="#3B82F6" fillOpacity={0} strokeWidth={2} strokeDasharray="4 4" />
+                      <Area type="monotone" dataKey="score" stroke="#0f766e" fillOpacity={1} fill="url(#colorScore)" strokeWidth={3} />
+                      <Area type="monotone" dataKey="engagement" stroke="#34d399" fillOpacity={0} strokeWidth={2} strokeDasharray="4 4" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
@@ -581,61 +585,61 @@ export function TechOpsView() {
             </AnimatePresence>
 
             {/* Tickets Table */}
-            <div className="lg:col-span-2 bg-[#151619] border border-white/10 rounded-3xl overflow-hidden">
-              <div className="p-6 border-b border-white/10 flex items-center justify-between">
-                <h3 className="text-sm font-mono font-bold text-gray-500 uppercase tracking-widest">Active Tickets</h3>
-                <div className="flex gap-2">
+            <div className="lg:col-span-2 bg-white border border-black/10 rounded-3xl overflow-hidden laminated-surface glass-reflection">
+              <div className="p-8 border-b border-black/5 flex items-center justify-between">
+                <h3 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em]">Active Tickets</h3>
+                <div className="flex gap-3">
                   <button 
                     onClick={() => setIsCreatingTicket(true)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500 text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-colors"
+                    className="flex items-center gap-2.5 px-5 py-2.5 bg-showroom-accent text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-showroom-accent/90 transition-all shadow-sm"
                   >
                     <Plus size={14} />
                     New Ticket
                   </button>
-                  <button className="p-2 bg-white/5 rounded-lg text-gray-400 hover:text-white transition-colors">
+                  <button className="p-2.5 bg-black/5 rounded-xl text-slate-600 hover:text-slate-900 transition-colors border border-black/5">
                     <Search size={16} />
                   </button>
-                  <button className="p-2 bg-white/5 rounded-lg text-gray-400 hover:text-white transition-colors">
+                  <button className="p-2.5 bg-black/5 rounded-xl text-slate-600 hover:text-slate-900 transition-colors border border-black/5">
                     <Filter size={16} />
                   </button>
                 </div>
               </div>
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/2 border-b border-white/5 text-[10px] uppercase tracking-widest text-gray-500 font-mono">
-                    <th className="p-6 font-medium">Ticket ID</th>
-                    <th className="p-6 font-medium">Subject</th>
-                    <th className="p-6 font-medium">Priority</th>
-                    <th className="p-6 font-medium">Status</th>
-                    <th className="p-6 font-medium text-right">Time</th>
+                  <tr className="bg-black/5 border-b border-black/5 text-[10px] uppercase tracking-widest text-slate-500 font-mono font-bold">
+                    <th className="p-8 font-medium">Ticket ID</th>
+                    <th className="p-8 font-medium">Subject</th>
+                    <th className="p-8 font-medium">Priority</th>
+                    <th className="p-8 font-medium">Status</th>
+                    <th className="p-8 font-medium text-right">Time</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5 text-xs font-mono">
+                <tbody className="divide-y divide-black/5 text-xs font-mono">
                   {tickets.map(ticket => (
-                    <tr key={ticket.id} className="hover:bg-white/2 transition-colors group">
-                      <td className="p-6 text-gray-500 group-hover:text-white">{ticket.id}</td>
-                      <td className="p-6">
+                    <tr key={ticket.id} className="hover:bg-black/5 transition-colors group">
+                      <td className="p-8 text-slate-500 group-hover:text-slate-900">{ticket.id}</td>
+                      <td className="p-8">
                         <div className="flex flex-col">
-                          <span className="text-white font-medium mb-1">{ticket.subject}</span>
-                          <span className="text-[10px] text-gray-500">Agent: {ticket.agent}</span>
+                          <span className="text-slate-900 font-medium mb-1.5 group-hover:text-showroom-accent transition-colors">{ticket.subject}</span>
+                          <span className="text-[10px] text-slate-500 uppercase tracking-widest">Agent: {ticket.agent}</span>
                         </div>
                       </td>
-                      <td className="p-6">
-                        <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
-                          ticket.priority === 'critical' ? 'bg-rose-500/10 text-rose-500' :
-                          ticket.priority === 'high' ? 'bg-amber-500/10 text-amber-500' :
-                          'bg-blue-500/10 text-blue-500'
+                      <td className="p-8">
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
+                          ticket.priority === 'critical' ? 'bg-rose-500/10 text-rose-700 border-rose-500/20' :
+                          ticket.priority === 'high' ? 'bg-amber-500/10 text-amber-700 border-amber-500/20' :
+                          'bg-showroom-accent/10 text-showroom-accent border-showroom-accent/20'
                         }`}>
                           {ticket.priority}
                         </span>
                       </td>
-                      <td className="p-6">
-                        <div className="flex items-center gap-2 text-gray-400">
-                          <div className={`w-1.5 h-1.5 rounded-full ${ticket.status === 'open' ? 'bg-blue-500' : 'bg-emerald-500'}`} />
-                          {ticket.status.toUpperCase()}
+                      <td className="p-8">
+                        <div className="flex items-center gap-2.5 text-slate-600 uppercase tracking-widest text-[10px] font-bold">
+                          <div className={`w-2 h-2 rounded-full ${ticket.status === 'open' ? 'bg-showroom-accent' : 'bg-emerald-500'}`} />
+                          {ticket.status}
                         </div>
                       </td>
-                      <td className="p-6 text-right text-gray-500">{ticket.time}</td>
+                      <td className="p-8 text-right text-slate-500">{ticket.time}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -644,36 +648,36 @@ export function TechOpsView() {
 
             {/* Agent Status */}
             <div className="space-y-8">
-              <div className="bg-[#151619] border border-white/10 rounded-3xl p-8">
-                <h3 className="text-sm font-mono font-bold text-gray-500 uppercase tracking-widest mb-6">Agent Availability</h3>
-                <div className="space-y-6">
+              <div className="bg-white border border-black/10 rounded-3xl p-10 laminated-surface glass-reflection">
+                <h3 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em] mb-8">Agent Availability</h3>
+                <div className="space-y-8">
                   {mockAgents.map((agent, i) => (
-                    <div key={i} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${agent.status === 'active' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-slate-800 text-slate-500'}`}>
+                    <div key={i} className="flex items-center justify-between group">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xs font-bold transition-all group-hover:scale-110 ${agent.status === 'active' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 'bg-slate-800 text-slate-500 border border-white/5'}`}>
                           {agent.name.charAt(0)}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-white">{agent.name}</p>
-                          <p className="text-[10px] text-gray-500 uppercase tracking-widest">{agent.status}</p>
+                          <p className="text-base font-medium text-white group-hover:text-showroom-accent transition-colors">{agent.name}</p>
+                          <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">{agent.status}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-mono text-white">{agent.tickets} Active</p>
-                        <p className="text-[10px] text-emerald-500 font-mono">{agent.csat} CSAT</p>
+                        <p className="text-sm font-mono text-white font-light">{agent.tickets} Active</p>
+                        <p className="text-[10px] text-emerald-500 font-mono font-bold uppercase tracking-widest">{agent.csat} CSAT</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-8 text-white relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-110 transition-transform">
-                  <BarChart3 size={64} />
+              <div className="bg-gradient-to-br from-showroom-accent to-indigo-600 rounded-3xl p-10 text-white relative overflow-hidden group shadow-[0_20px_40px_rgba(59,130,246,0.2)]">
+                <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:scale-110 transition-transform duration-500">
+                  <BarChart3 size={80} />
                 </div>
-                <h3 className="text-xl font-serif font-medium mb-2">Weekly Report</h3>
-                <p className="text-white/70 text-sm mb-6">Your team resolved 142 tickets this week, up 12% from last week.</p>
-                <button className="w-full py-3 bg-white text-indigo-600 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/90 transition-all">
+                <h3 className="text-2xl font-display font-light mb-3">Weekly Report</h3>
+                <p className="text-white/70 text-sm mb-8 leading-relaxed font-light">Your team resolved 142 tickets this week, up 12% from last week.</p>
+                <button className="w-full py-4 bg-white text-showroom-accent rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-white/90 transition-all shadow-xl">
                   View Analytics
                 </button>
               </div>
@@ -691,17 +695,17 @@ export function TechOpsView() {
           >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
-                <div className="bg-[#151619] border border-white/10 rounded-3xl p-8 flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-10 flex flex-col lg:flex-row items-center justify-between gap-8 laminated-surface glass-reflection">
               <div className="space-y-2">
-                <h3 className="text-2xl font-serif font-medium">Autonomous Command Center</h3>
-                <p className="text-gray-500 text-sm max-w-xl">
+                <h3 className="text-2xl font-serif font-medium text-white">Autonomous Command Center</h3>
+                <p className="text-slate-500 text-sm max-w-xl font-light">
                   Apphia continuously monitors signals to predict failures and autonomously deploy fixes.
                 </p>
               </div>
               <button 
                 onClick={runAutonomousDiagnostic}
                 disabled={isLoading}
-                className="px-8 py-4 bg-[#00FF00] text-black rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:scale-105 transition-all flex items-center gap-2"
+                className="px-8 py-4 bg-showroom-accent text-black rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:scale-105 transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(45,212,191,0.3)]"
               >
                 {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Activity size={14} />}
                 Run Global Diagnostic
@@ -714,13 +718,13 @@ export function TechOpsView() {
                   key={fix.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="bg-[#151619] border border-white/10 rounded-3xl p-8 grid grid-cols-1 lg:grid-cols-4 gap-8 items-center"
+                  className="bg-white border border-black/10 rounded-3xl p-10 grid grid-cols-1 lg:grid-cols-4 gap-8 items-center laminated-surface glass-reflection"
                 >
                   <div className="space-y-1">
-                    <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">{fix.timestamp}</span>
-                    <h4 className="text-lg font-medium text-white">{fix.id}</h4>
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{fix.timestamp}</span>
+                    <h4 className="text-lg font-medium text-slate-900">{fix.id}</h4>
                     <div className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest ${
-                      fix.status === 'resolved' ? 'text-emerald-500' : 'text-amber-500'
+                      fix.status === 'resolved' ? 'text-emerald-700' : 'text-amber-700'
                     }`}>
                       <div className={`w-1.5 h-1.5 rounded-full ${fix.status === 'resolved' ? 'bg-emerald-500' : 'bg-amber-500 animate-pulse'}`} />
                       {fix.status}
@@ -729,62 +733,62 @@ export function TechOpsView() {
 
                   <div className="lg:col-span-2 space-y-4">
                     <div>
-                      <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Detected Issue</p>
-                      <p className="text-sm text-white">{fix.issue}</p>
+                      <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">Detected Issue</p>
+                      <p className="text-sm text-slate-900 font-light">{fix.issue}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">AI Diagnosis</p>
-                      <p className="text-xs text-gray-400">{fix.diagnosis}</p>
+                      <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-1">AI Diagnosis</p>
+                      <p className="text-xs text-slate-600 font-light">{fix.diagnosis}</p>
                     </div>
                   </div>
 
-                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
-                    <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2">Deployed Solution</p>
-                    <p className="text-xs text-emerald-500 font-mono italic">&quot;{fix.solution}&quot;</p>
+                  <div className="bg-black/5 border border-black/5 rounded-2xl p-6">
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Deployed Solution</p>
+                    <p className="text-xs text-showroom-accent font-mono italic">&quot;{fix.solution}&quot;</p>
                   </div>
                 </motion.div>
               ))}
 
               {autonomousFixes.length === 0 && (
-                <div className="py-20 text-center border border-dashed border-white/10 rounded-3xl bg-white/2">
-                  <ShieldAlert size={48} className="mx-auto text-gray-700 mb-4" />
-                  <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">No autonomous actions required at this time.</p>
+                <div className="py-20 text-center border border-dashed border-black/10 rounded-3xl bg-black/5">
+                  <ShieldAlert size={48} className="mx-auto text-slate-400 mb-4" />
+                  <p className="text-slate-500 font-mono text-xs uppercase tracking-widest">No autonomous actions required at this time.</p>
                 </div>
               )}
             </div>
           </div>
 
           <div className="space-y-8">
-            <div className="bg-[#151619] border border-white/10 rounded-3xl p-8">
-              <h3 className="text-sm font-mono font-bold text-gray-500 uppercase tracking-widest mb-6">Predictive Signals</h3>
-              <div className="space-y-6">
+            <div className="bg-white border border-black/10 rounded-3xl p-10 laminated-surface glass-reflection">
+              <h3 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em] mb-8">Predictive Signals</h3>
+              <div className="space-y-8">
                 {[
                   { label: "Memory Pressure", value: 42, status: "stable" },
                   { label: "Network Latency", value: 12, status: "stable" },
                   { label: "DB Lock Contention", value: 8, status: "stable" },
                   { label: "API Error Rate", value: 0.02, status: "stable" }
                 ].map((signal, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="flex justify-between text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest">
+                  <div key={i} className="space-y-3">
+                    <div className="flex justify-between text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
                       <span>{signal.label}</span>
-                      <span className="text-emerald-500">{signal.status}</span>
+                      <span className="text-emerald-700">{signal.status}</span>
                     </div>
-                    <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${signal.value}%` }} />
+                    <div className="w-full h-1.5 bg-black/5 rounded-full overflow-hidden border border-black/5">
+                      <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${signal.value}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-emerald-500 rounded-3xl p-8 text-black">
-              <div className="w-12 h-12 rounded-2xl bg-black/10 flex items-center justify-center mb-6">
+            <div className="bg-showroom-accent rounded-3xl p-10 text-white shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
                 <ShieldCheck size={24} />
               </div>
               <h3 className="text-xl font-serif font-medium mb-2">Autonomous Mode</h3>
-              <p className="text-black/60 text-sm mb-6">Apphia is currently managing 42 micro-services with zero manual intervention required.</p>
-              <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest">
-                <div className="w-2 h-2 rounded-full bg-black animate-pulse" />
+              <p className="text-white/80 text-sm mb-8 font-light">Apphia is currently managing 42 micro-services with zero manual intervention required.</p>
+              <div className="flex items-center gap-2.5 font-mono text-[10px] font-bold uppercase tracking-widest">
+                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
                 System Healthy
               </div>
             </div>
@@ -792,6 +796,61 @@ export function TechOpsView() {
         </div>
           </motion.div>
         )}
+        {activeTab === 'support' && (
+          <motion.div 
+            key="support"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-8"
+          >
+            <TechSupportChat />
+          </motion.div>
+        )}
+        {activeTab === 'infrastructure' && (
+          <motion.div 
+            key="infrastructure"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="space-y-8"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { label: 'Compute Nodes', value: '128', status: 'operational', icon: Cpu },
+                { label: 'Storage Clusters', value: '12', status: 'operational', icon: Database },
+                { label: 'Edge Locations', value: '24', status: 'operational', icon: Globe },
+              ].map((item, i) => (
+                <div key={i} className="bg-white border border-black/10 rounded-3xl p-8 laminated-surface glass-reflection">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-showroom-accent/10 border border-showroom-accent/20 flex items-center justify-center text-showroom-accent">
+                      <item.icon size={24} />
+                    </div>
+                    <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] font-mono text-emerald-700 font-bold uppercase tracking-widest">
+                      {item.status}
+                    </span>
+                  </div>
+                  <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">{item.label}</p>
+                  <p className="text-3xl font-display font-light text-slate-900">{item.value}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-white border border-black/10 rounded-3xl p-10 laminated-surface glass-reflection">
+              <h3 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em] mb-10">Global Infrastructure Map</h3>
+              <div className="h-[400px] bg-black/5 rounded-2xl border border-black/5 flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-showroom-accent rounded-full animate-ping" />
+                  <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-showroom-accent rounded-full animate-ping" />
+                  <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-showroom-accent rounded-full animate-ping" />
+                </div>
+                <Globe size={120} className="text-showroom-accent/20" />
+                <p className="absolute bottom-8 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Real-time traffic visualization active</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {activeTab === 'appmaker' && (
           <motion.div 
             key="appmaker"
@@ -800,14 +859,14 @@ export function TechOpsView() {
             exit={{ opacity: 0, y: -20 }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-8"
           >
-            <div className="bg-[#151619] border border-white/10 rounded-3xl p-8 space-y-6">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-[#00FF00]/10 border border-[#00FF00]/20 flex items-center justify-center">
-                  <Zap className="text-[#00FF00]" size={20} />
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-10 space-y-8 laminated-surface glass-reflection">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-12 h-12 rounded-2xl bg-showroom-accent/10 border border-showroom-accent/20 flex items-center justify-center">
+                  <Zap className="text-showroom-accent" size={24} />
                 </div>
-                <h3 className="text-xl font-serif font-medium">Apphia App Maker</h3>
+                <h3 className="text-2xl font-serif font-medium text-white">Apphia App Maker</h3>
               </div>
-              <p className="text-gray-500 text-sm">
+              <p className="text-slate-500 text-sm font-light leading-relaxed">
                 Describe the utility or micro-app you need, and Apphia will generate a technical blueprint and starter code.
               </p>
               <textarea 
@@ -815,48 +874,48 @@ export function TechOpsView() {
                 onChange={e => setAppDescription(e.target.value)}
                 placeholder="e.g., A real-time dashboard for tracking server costs across AWS and GCP..."
                 rows={8}
-                className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-sm font-mono focus:border-[#00FF00]/50 focus:ring-1 focus:ring-[#00FF00]/50 outline-none transition-all"
+                className="w-full bg-black/40 border border-white/10 rounded-2xl p-6 text-sm font-mono focus:border-showroom-accent/50 focus:ring-1 focus:ring-showroom-accent/50 outline-none transition-all text-white"
               />
               <button 
                 onClick={handleGenerateApp}
                 disabled={!appDescription.trim() || isLoading}
-                className="w-full py-4 bg-[#00FF00] text-black rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-4 bg-showroom-accent text-black rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-[0_0_15px_rgba(45,212,191,0.3)]"
               >
                 {isLoading ? <Loader2 size={14} className="animate-spin" /> : <Cpu size={14} />}
                 Generate App Blueprint
               </button>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {generatedApp ? (
-                <div className="bg-[#151619] border border-white/10 rounded-3xl p-8 space-y-8 overflow-y-auto max-h-[600px]">
+                <div className="bg-white/5 border border-white/10 rounded-3xl p-10 space-y-10 overflow-y-auto max-h-[700px] laminated-surface glass-reflection no-scrollbar">
                   <div>
-                    <h4 className="text-[#00FF00] font-mono text-[10px] font-bold uppercase tracking-widest mb-2">App Name</h4>
-                    <p className="text-2xl font-serif font-medium">{generatedApp.name}</p>
+                    <h4 className="text-showroom-accent font-mono text-[10px] font-bold uppercase tracking-widest mb-3">App Name</h4>
+                    <p className="text-3xl font-serif font-medium text-white text-glow">{generatedApp.name}</p>
                   </div>
 
                   <div>
-                    <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-2">Description</h4>
-                    <p className="text-sm text-gray-400 leading-relaxed">{generatedApp.description}</p>
+                    <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-3">Description</h4>
+                    <p className="text-sm text-slate-400 leading-relaxed font-light">{generatedApp.description}</p>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-2 gap-8">
                     <div>
-                      <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-3">Tech Stack</h4>
-                      <div className="flex flex-wrap gap-2">
+                      <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-4">Tech Stack</h4>
+                      <div className="flex flex-wrap gap-2.5">
                         {generatedApp.techStack.map((tech, i) => (
-                          <span key={i} className="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] font-mono text-gray-300">
+                          <span key={i} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[10px] font-mono text-slate-300 uppercase tracking-widest">
                             {tech}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-3">Key Features</h4>
-                      <ul className="space-y-1">
+                      <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-4">Key Features</h4>
+                      <ul className="space-y-2">
                         {generatedApp.features.map((feature, i) => (
-                          <li key={i} className="text-[10px] text-gray-400 flex items-center gap-2">
-                            <div className="w-1 h-1 rounded-full bg-[#00FF00]" />
+                          <li key={i} className="text-[10px] text-slate-400 flex items-center gap-2.5 font-light uppercase tracking-widest">
+                            <div className="w-1.5 h-1.5 rounded-full bg-showroom-accent shadow-[0_0_8px_rgba(45,212,191,0.4)]" />
                             {feature}
                           </li>
                         ))}
@@ -865,63 +924,63 @@ export function TechOpsView() {
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest">Frontend (React + Tailwind)</h4>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest">Frontend (React + Tailwind)</h4>
                       <button 
                         onClick={() => {
                           navigator.clipboard.writeText(generatedApp.frontendCode);
                           alert('Code copied!');
                         }}
-                        className="text-[10px] font-mono text-[#00FF00] hover:underline"
+                        className="text-[10px] font-mono text-showroom-accent hover:underline uppercase tracking-widest font-bold"
                       >
                         Copy
                       </button>
                     </div>
-                    <pre className="bg-black/60 border border-white/5 rounded-2xl p-4 text-[10px] font-mono text-gray-300 overflow-x-auto max-h-40">
+                    <pre className="bg-black/60 border border-white/5 rounded-2xl p-6 text-[10px] font-mono text-slate-300 overflow-x-auto max-h-48 no-scrollbar">
                       <code>{generatedApp.frontendCode}</code>
                     </pre>
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest">Backend (Node.js API)</h4>
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest">Backend (Node.js API)</h4>
                       <button 
                         onClick={() => {
                           navigator.clipboard.writeText(generatedApp.backendCode);
                           alert('Code copied!');
                         }}
-                        className="text-[10px] font-mono text-[#00FF00] hover:underline"
+                        className="text-[10px] font-mono text-showroom-accent hover:underline uppercase tracking-widest font-bold"
                       >
                         Copy
                       </button>
                     </div>
-                    <pre className="bg-black/60 border border-white/5 rounded-2xl p-4 text-[10px] font-mono text-gray-300 overflow-x-auto max-h-40">
+                    <pre className="bg-black/60 border border-white/5 rounded-2xl p-6 text-[10px] font-mono text-slate-300 overflow-x-auto max-h-48 no-scrollbar">
                       <code>{generatedApp.backendCode}</code>
                     </pre>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-2 gap-8">
                     <div>
-                      <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-3">Data Schema</h4>
-                      <pre className="bg-black/60 border border-white/5 rounded-xl p-3 text-[10px] font-mono text-gray-400 overflow-x-auto max-h-32">
+                      <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-4">Data Schema</h4>
+                      <pre className="bg-black/60 border border-white/5 rounded-2xl p-4 text-[10px] font-mono text-slate-400 overflow-x-auto max-h-32 no-scrollbar">
                         <code>{generatedApp.databaseSchema}</code>
                       </pre>
                     </div>
                     <div>
-                      <h4 className="text-gray-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-3">Storage Layer</h4>
-                      <p className="text-[10px] text-gray-400 leading-relaxed bg-white/5 p-3 rounded-xl border border-white/5">
+                      <h4 className="text-slate-500 font-mono text-[10px] font-bold uppercase tracking-widest mb-4">Storage Layer</h4>
+                      <p className="text-[10px] text-slate-400 leading-relaxed bg-white/5 p-4 rounded-2xl border border-white/5 font-light uppercase tracking-widest">
                         {generatedApp.storageStrategy}
                       </p>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="h-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-3xl text-gray-600 bg-white/2 p-12 text-center">
-                  <div className="w-16 h-16 rounded-[2rem] bg-white/5 flex items-center justify-center mb-4">
-                    <Zap size={32} />
+                <div className="h-full flex flex-col items-center justify-center border border-dashed border-white/10 rounded-[3rem] text-slate-600 bg-white/2 p-12 text-center">
+                  <div className="w-20 h-20 rounded-[2.5rem] bg-white/5 flex items-center justify-center mb-6 border border-white/10">
+                    <Zap size={40} className="text-slate-700" />
                   </div>
-                  <h3 className="text-white font-medium mb-2">Ready for Generation</h3>
-                  <p className="text-xs max-w-xs">Describe your micro-app on the left to see the AI-generated blueprint here.</p>
+                  <h3 className="text-white font-medium mb-3 text-lg">Ready for Generation</h3>
+                  <p className="text-xs max-w-xs text-slate-500 font-light leading-relaxed">Describe your micro-app on the left to see the AI-generated blueprint here.</p>
                 </div>
               )}
             </div>
@@ -934,13 +993,13 @@ export function TechOpsView() {
 
 function StatusBadge({ status, label }: { status: 'operational' | 'degraded' | 'down', label: string }) {
   const colors = {
-    operational: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-    degraded: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
-    down: 'bg-rose-500/10 text-rose-500 border-rose-500/20',
+    operational: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]',
+    degraded: 'bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]',
+    down: 'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-[0_0_10px_rgba(244,63,94,0.1)]',
   };
   return (
-    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${colors[status]} text-[10px] font-mono uppercase tracking-widest`}>
-      <div className={`w-1.5 h-1.5 rounded-full ${status === 'operational' ? 'bg-emerald-500' : status === 'degraded' ? 'bg-amber-500' : 'bg-rose-500'} animate-pulse`} />
+    <div className={`flex items-center gap-2.5 px-4 py-2 rounded-full border ${colors[status]} text-[10px] font-mono font-bold uppercase tracking-widest glass-reflection`}>
+      <div className={`w-2 h-2 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)] ${status === 'operational' ? 'bg-emerald-500 shadow-emerald-500/40' : status === 'degraded' ? 'bg-amber-500 shadow-amber-500/40' : 'bg-rose-500 shadow-rose-500/40'} animate-pulse`} />
       {label}
     </div>
   );
@@ -949,18 +1008,18 @@ function StatusBadge({ status, label }: { status: 'operational' | 'degraded' | '
 function StatCard({ label, value, trend, icon: Icon, color }: { label: string, value: string, trend: string, icon: any, color: string }) {
   const isPositive = trend.startsWith('+');
   return (
-    <div className="bg-[#151619] border border-white/10 rounded-3xl p-6 hover:border-white/20 transition-all group">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center ${color}`}>
-          <Icon size={20} />
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-showroom-accent/30 transition-all group laminated-surface glass-reflection">
+      <div className="flex items-center justify-between mb-6">
+        <div className={`w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center transition-all group-hover:scale-110 ${color}`}>
+          <Icon size={24} />
         </div>
-        <div className={`flex items-center gap-1 text-[10px] font-mono font-bold ${isPositive ? 'text-emerald-500' : 'text-rose-500'}`}>
+        <div className={`flex items-center gap-1.5 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-white/5 border border-white/10 ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
           {isPositive ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
           {trend}
         </div>
       </div>
-      <p className="text-[10px] font-mono font-bold text-gray-500 uppercase tracking-widest mb-1">{label}</p>
-      <p className="text-2xl font-serif font-medium text-white">{value}</p>
+      <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">{label}</p>
+      <p className="text-3xl font-display font-light text-white text-glow">{value}</p>
     </div>
   );
 }
@@ -968,15 +1027,15 @@ function StatCard({ label, value, trend, icon: Icon, color }: { label: string, v
 function ScoreBar({ label, value, color }: { label: string, value: number, color: string }) {
   return (
     <div>
-      <div className="flex justify-between text-[10px] font-mono font-bold text-gray-500 mb-2 uppercase tracking-widest">
+      <div className="flex justify-between text-[10px] font-mono font-bold text-slate-500 mb-2.5 uppercase tracking-[0.2em]">
         <span>{label}</span>
         <span className="text-white">{value}%</span>
       </div>
-      <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
         <motion.div 
           initial={{ width: 0 }}
           animate={{ width: `${value}%` }}
-          className={`h-full ${color} rounded-full`} 
+          className={`h-full ${color} rounded-full shadow-[0_0_10px_rgba(45,212,191,0.2)]`} 
         />
       </div>
     </div>
