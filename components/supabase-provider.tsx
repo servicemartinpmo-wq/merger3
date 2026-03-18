@@ -26,7 +26,13 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
           setIsLoading(false);
           return;
         }
-        const { data: { session } } = await supabase.auth.getSession();
+        // Set a timeout for the session fetch to prevent infinite loading
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Session fetch timeout')), 5000)
+        );
+
+        const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]) as any;
         setSession(session);
         setUser(session?.user ?? null);
       } catch (error) {
