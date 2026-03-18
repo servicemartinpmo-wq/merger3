@@ -11,3 +11,6 @@ coverage/
 wrangler.jsonc
 open-next.config.ts
 public/_headers
+
+.dev.vars*
+!.dev.vars.example
