@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { DashboardView } from '@/components/dashboard-view';
 import { PlanEngineView } from '@/components/plan-engine-view';
 import { BackgroundCollage } from '@/components/background-collage';
 import { IndustryMode } from '@/lib/types/pmo';
 import { CommandEnginePanel } from '@/components/command-engine-panel';
 import { LockscreenBanner } from '@/components/lockscreen-banner';
-import { FounderDashboardView } from '@/components/founder-dashboard-view';
 import { InitiativesView } from '@/components/initiatives-view';
 import { ActionItemsView } from '@/components/action-items-view';
 import { SystemsView } from '@/components/systems-view';
@@ -58,9 +56,31 @@ export default function DashboardPage() {
   const [industryMode, setIndustryMode] = useState<IndustryMode>('SMB');
   const [view, setView] = useState<ViewType>('pmo');
   const [assistedMode, setAssistedMode] = useState(false);
-  const [initiatives, setInitiatives] = useState([]);
-  const [actionItems, setActionItems] = useState([]);
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
+
+  const today = new Date();
+  const day = today.getDay();
+  let content = { title: '', content: '', teamWins: [] as string[] };
+  
+  if (day === 1) {
+    content = {
+      title: "Weekly Projection",
+      content: "Focusing on key initiatives for the week ahead.",
+      teamWins: ["Completed Q1 planning", "Onboarded new lead", "Finalized project roadmap"]
+    };
+  } else if (day === 5) {
+    content = {
+      title: "Weekly Debrief",
+      content: "Reviewing the week's accomplishments.",
+      teamWins: ["Launched feature X", "Resolved critical bug", "Client feedback positive"]
+    };
+  } else {
+    content = {
+      title: "Daily Operational Status",
+      content: "Maintaining operational health.",
+      teamWins: ["Daily standup completed", "Resource conflict resolved"]
+    };
+  }
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -92,7 +112,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-showroom-bg text-slate-900 font-sans flex relative">
+    <div className="min-h-screen bg-showroom-bg text-slate-100 font-sans flex relative">
       <BackgroundCollage />
       <CommandEnginePanel 
         view={view} 
@@ -106,29 +126,36 @@ export default function DashboardPage() {
 
       <div className="flex-1 flex flex-col">
         {/* OS Status Bar */}
-        <div className="h-8 bg-slate-900 text-white px-4 flex items-center justify-between text-[10px] font-mono uppercase tracking-widest border-b border-white/5">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1 opacity-60">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>System Online</span>
+        <div className="bg-black/40 backdrop-blur-md text-white px-4 py-2 border-b border-white/10 z-50">
+          <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 opacity-60">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>System Online</span>
+              </div>
+              <div className="border-l border-white/20 pl-4 opacity-60">
+                <span>Mode: {industryMode.toUpperCase()}</span>
+              </div>
             </div>
-            <div className="border-l border-white/20 pl-4 opacity-60">
-              <span>Mode: {industryMode.toUpperCase()}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 opacity-80">
-              <Wifi size={10} />
-              <Signal size={10} />
-              <Battery size={10} />
-            </div>
-            <div className="border-l border-white/20 pl-4">
-              {currentTime ? currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 opacity-80">
+                <Wifi size={10} />
+                <Signal size={10} />
+                <Battery size={10} />
+              </div>
+              <div className="border-l border-white/20 pl-4">
+                {currentTime ? currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
+              </div>
             </div>
           </div>
         </div>
 
-        <LockscreenBanner mode={industryMode} />
+        <LockscreenBanner 
+          mode={industryMode} 
+          operationalStatus={content.title}
+          operationalDetail={content.content}
+          teamWins={content.teamWins}
+        />
 
         {/* Main Content */}
         <main className="flex-1 p-8 space-y-8 overflow-y-auto">
@@ -142,17 +169,27 @@ export default function DashboardPage() {
                 transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                 className="min-h-[600px]"
               >
+                {view === 'pmo' && (
+                  <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+                    <div className="w-24 h-24 rounded-full bg-showroom-accent/10 border border-showroom-accent/20 flex items-center justify-center">
+                      <Gauge size={48} className="text-showroom-accent" />
+                    </div>
+                    <div className="space-y-2">
+                      <h2 className="text-3xl font-display font-light">Command Center Active</h2>
+                      <p className="text-slate-400 max-w-md">Select an engine from the sidebar to begin operational management.</p>
+                    </div>
+                  </div>
+                )}
                 {view === 'plan-engine' && <PlanEngineView />}
-                {view === 'pmo' && <DashboardView assistedMode={assistedMode} />}
                 {view === 'initiatives' && <InitiativesView />}
-                {view === 'actions' && <ActionItemsView actionItems={actionItems} setActionItems={setActionItems} setView={setView} setSelectedEmailId={setSelectedEmailId} />}
+                {view === 'actions' && <ActionItemsView setView={setView} setSelectedEmailId={setSelectedEmailId} />}
                 {view === 'systems' && <SystemsView />}
                 {view === 'resources' && <ResourceHubView />}
                 {view === 'team' && <TeamPageView />}
                 {view === 'advisory' && <AdvisoryDeskView />}
                 {view === 'onboarding' && <OnboardingView onComplete={handleIntakeComplete} />}
                 {view === 'ops' && <OpsMonitorView />}
-                {view === 'email' && <EmailIntelligenceView actionItems={actionItems} setActionItems={setActionItems} selectedEmailId={selectedEmailId} setSelectedEmailId={setSelectedEmailId} />}
+                {view === 'email' && <EmailIntelligenceView selectedEmailId={selectedEmailId} setSelectedEmailId={setSelectedEmailId} />}
                 {view === 'workflow' && <WorkflowBuilderView />}
                 {view === 'diagnostics' && <DiagnosticsView />}
                 {view === 'qc' && <QualityControlView />}

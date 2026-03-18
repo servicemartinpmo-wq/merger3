@@ -1,5 +1,5 @@
 {
-  "name": "Apphia",
-  "description": "Apphia: The Data Operating System for PMO-Ops Command Centers.",
+  "name": "Command Center by Martin PMO-Ops",
+  "description": "Command Center by Martin PMO-Ops: The Data Operating System powered by Apphia, the thinking engine.",
   "requestFramePermissions": ["camera", "microphone", "geolocation"]
 }

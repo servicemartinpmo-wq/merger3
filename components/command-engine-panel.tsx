@@ -17,8 +17,9 @@ export function CommandEnginePanel({ view, setView, navItems, industryMode, setI
           <Activity size={24} />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-light text-white">Venture-OS</h1>
-          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-blue-300">Command Engine</p>
+          <h1 className="font-display text-lg font-light text-white leading-tight">Command Center</h1>
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-blue-300">by Martin PMO-Ops</p>
+          <p className="text-[9px] font-mono uppercase tracking-[0.1em] text-slate-500 mt-1">Powered by Apphia</p>
         </div>
       </div>
 

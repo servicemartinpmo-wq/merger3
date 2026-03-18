@@ -7,13 +7,15 @@ type Theme = {
   card: string;
   border: string;
   accent: string;
+  wallpaper?: string;
 };
 
 const defaultTheme: Theme = {
-  bg: '#e2e8f0',
-  card: '#f8fafc',
-  border: 'rgba(0, 0, 0, 0.08)',
-  accent: '#334155',
+  bg: '#000000',
+  card: '#18181b',
+  border: 'rgba(255, 255, 255, 0.1)',
+  accent: '#3b82f6',
+  wallpaper: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=3840&auto=format&fit=crop',
 };
 
 const ThemeContext = createContext<{
@@ -38,6 +40,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.style.setProperty('--card-color', theme.card);
     document.documentElement.style.setProperty('--border-color', theme.border);
     document.documentElement.style.setProperty('--accent-color', theme.accent);
+    if (theme.wallpaper) {
+      document.documentElement.style.setProperty('--wallpaper', `url(${theme.wallpaper})`);
+    }
     localStorage.setItem('venture-os-theme', JSON.stringify(theme));
   }, [theme]);
 

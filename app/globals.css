@@ -2,10 +2,10 @@
 @import "tw-animate-css";
 
 :root {
-  --bg-color: #020617; /* Slate 950 */
-  --card-color: #0f172a; /* Slate 900 */
-  --border-color: rgba(255, 255, 255, 0.15);
-  --accent-color: #60a5fa; /* Blue 400 */
+  --bg-color: #000000; /* Black */
+  --card-color: #18181b; /* Zinc 900 */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --accent-color: #3b82f6; /* Blue 500 */
 }
 
 @theme {
@@ -13,6 +13,7 @@
   --color-showroom-card: var(--card-color);
   --color-showroom-border: var(--border-color);
   --color-showroom-accent: var(--accent-color);
+  --wallpaper: var(--wallpaper);
   
   --font-display: 'Inter', sans-serif;
 }

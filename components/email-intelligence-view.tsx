@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, ArrowRight, CheckCircle2, Clock, AlertCircle, Cpu, Inbox, Trash2, Plus, Loader2, FileText, Sparkles } from 'lucide-react';
 import { GoogleGenAI, Type } from '@google/genai';
@@ -76,7 +76,7 @@ const mockEmails: EmailData[] = [
   }
 ];
 
-export function EmailIntelligenceView({ actionItems, setActionItems, selectedEmailId, setSelectedEmailId }: { actionItems: any[], setActionItems: any, selectedEmailId: string | null, setSelectedEmailId: any }) {
+export function EmailIntelligenceView({ selectedEmailId, setSelectedEmailId }: { selectedEmailId: string | null, setSelectedEmailId: any }) {
   const { user, signInWithGoogle } = useSupabase();
   const [emails, setEmails] = useState<EmailData[]>(mockEmails);
   const [selectedEmail, setSelectedEmail] = useState<EmailData | null>(mockEmails[0]);
@@ -119,6 +119,7 @@ export function EmailIntelligenceView({ actionItems, setActionItems, selectedEma
 
     fetchEmails();
   }, []);
+
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [newEmail, setNewEmail] = useState({ subject: '', sender: '', body: '' });
   const [isProcessing, setIsProcessing] = useState(false);
@@ -170,24 +171,29 @@ export function EmailIntelligenceView({ actionItems, setActionItems, selectedEma
     }, 2000);
   };
 
-  const handleApprove = (id: string, action: 'discard' | 'approve') => {
-    if (action === 'approve') {
+  const handleApprove = async (id: string, action: 'discard' | 'approve') => {
+    if (action === 'approve' && user) {
       const email = emails.find(e => e.id === id);
       if (email && email.extracted) {
         const newActionItems = email.extracted.actionItems.map((item, i) => ({
-          id: `ACT-${Date.now()}-${i}`,
           title: item,
           status: 'pending',
           owner: email.extracted?.owner || 'Unassigned',
           date: email.extracted?.deadline || 'None',
           directive: email.extracted?.initiative || 'General',
           priority: email.extracted?.priority || 'Medium',
-          link: `Email: ${email.subject}`,
-          emailId: email.id,
-          category: 'Email'
+          email_id: email.id,
+          category: 'Email',
+          user_id: user.id
         }));
-        setActionItems([...actionItems, ...newActionItems]);
-        alert('Task successfully added to the Action Items & Events page!');
+        
+        const { error } = await supabase.from('action_items').insert(newActionItems);
+        if (error) {
+          console.error('Error syncing action items:', error);
+          alert('Failed to sync action items.');
+        } else {
+          alert('Task successfully added to the Action Items & Events page!');
+        }
       }
     }
     

@@ -425,7 +425,7 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                   </div>
                   <h2 className="text-4xl font-serif font-medium tracking-tight text-slate-950">Ready for liftoff</h2>
                   <p className="text-slate-500 max-w-md mx-auto">
-                    We&apos;ve configured your Venture-OS environment based on your inputs. Welcome to the future of operations.
+                    We&apos;ve configured your Command Center environment based on your inputs. Powered by Apphia, your new operational intelligence partner.
                   </p>
                 </div>
 
@@ -435,12 +435,12 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                     <span className="text-sm font-bold text-slate-900">{formData.industry || 'Standard'} Mode</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-widest text-slate-400">Scale</span>
-                    <span className="text-sm font-bold text-slate-900">{formData.teamSize || '1'} Users</span>
+                    <span className="text-xs font-mono uppercase tracking-widest text-slate-400">Engine</span>
+                    <span className="text-sm font-bold text-slate-900">Apphia Intelligence</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase tracking-widest text-slate-400">Focus</span>
-                    <span className="text-sm font-bold text-slate-900">{formData.goals.length} Strategic Goals</span>
+                    <span className="text-xs font-mono uppercase tracking-widest text-slate-400">Scale</span>
+                    <span className="text-sm font-bold text-slate-900">{formData.teamSize || '1'} Users</span>
                   </div>
                 </div>
               </motion.div>

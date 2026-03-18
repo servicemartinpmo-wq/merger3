@@ -153,7 +153,7 @@ export function WorkflowBuilderView() {
               </div>
               <div>
                 <h3 className="text-xl font-serif font-medium">Diagnostic-Based Suggestions</h3>
-                <p className="text-teal-400 text-xs font-mono uppercase tracking-widest">Apphia Intelligence Engine</p>
+                <p className="text-teal-400 text-xs font-mono uppercase tracking-widest">Apphia</p>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
