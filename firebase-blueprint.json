@@ -1,26 +1,171 @@
 {
   "entities": {
+    "Ticket": {
+      "title": "Ticket",
+      "description": "A support or operational ticket.",
+      "type": "object",
+      "properties": {
+        "subject": { "type": "string" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+        "status": { "type": "string", "enum": ["open", "in-progress", "closed"] },
+        "agent": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["subject", "priority", "status", "userId"]
+    },
+    "Email": {
+      "title": "Email",
+      "description": "An email record for intelligence processing.",
+      "type": "object",
+      "properties": {
+        "subject": { "type": "string" },
+        "sender": { "type": "string" },
+        "body": { "type": "string" },
+        "status": { "type": "string" },
+        "extracted": { "type": "object" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["subject", "sender", "body", "userId"]
+    },
+    "Initiative": {
+      "title": "Initiative",
+      "description": "A strategic initiative.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "owner": { "type": "string" },
+        "department": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "owner", "department", "userId"]
+    },
+    "ActionItem": {
+      "title": "ActionItem",
+      "description": "A specific task or action item.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "status": { "type": "string" },
+        "owner": { "type": "string" },
+        "date": { "type": "string" },
+        "directive": { "type": "string" },
+        "priority": { "type": "string" },
+        "category": { "type": "string" },
+        "emailId": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "owner", "userId"]
+    },
+    "Meeting": {
+      "title": "Meeting",
+      "description": "A scheduled meeting.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "time": { "type": "string" },
+        "status": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "time", "userId"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "User-specific application settings.",
+      "type": "object",
+      "properties": {
+        "theme": { "type": "object" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId"]
+    },
     "Plan": {
       "title": "Plan",
       "description": "A recurring structural plan or function.",
       "type": "object",
       "properties": {
-        "title": { "type": "string", "description": "Name of the plan" },
-        "owner": { "type": "string", "description": "Owner of the plan" },
-        "outcome": { "type": "string", "description": "Expected outcome" },
+        "title": { "type": "string" },
+        "owner": { "type": "string" },
+        "outcome": { "type": "string" },
         "cadence": { "type": "string", "enum": ["weekly", "monthly", "quarterly"] },
-        "risks": { "type": "string", "description": "Initial risks" },
-        "reportingMetric": { "type": "string", "description": "Metric to track" },
         "status": { "type": "string", "enum": ["green", "yellow", "red"] },
-        "nextReminder": { "type": "string", "format": "date-time" }
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["title", "owner", "outcome", "cadence", "reportingMetric"]
+      "required": ["title", "owner", "outcome", "cadence", "userId"]
+    },
+    "System": {
+      "title": "System",
+      "description": "An operational system.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "purpose": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "purpose", "userId"]
+    },
+    "Resource": {
+      "title": "Resource",
+      "description": "A resource in the hub.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "department": { "type": "string" },
+        "problem": { "type": "string" },
+        "purpose": { "type": "string" },
+        "pastUse": { "type": "string" },
+        "relevance": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "type", "department", "userId"]
+    },
+    "TeamMember": {
+      "title": "TeamMember",
+      "description": "A member of the team.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "role", "userId"]
+    },
+    "TeamUpdate": {
+      "title": "TeamUpdate",
+      "description": "A log of team actions.",
+      "type": "object",
+      "properties": {
+        "userName": { "type": "string" },
+        "action": { "type": "string" },
+        "target": { "type": "string" },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userName", "action", "target", "userId"]
     }
   },
   "firestore": {
-    "/plans/{planId}": {
-      "schema": { "$ref": "Plan" },
-      "description": "Collection of recurring plans."
-    }
+    "tickets": { "schema": "Ticket", "description": "Support tickets" },
+    "emails": { "schema": "Email", "description": "Email intelligence records" },
+    "initiatives": { "schema": "Initiative", "description": "Strategic initiatives" },
+    "action_items": { "schema": "ActionItem", "description": "Action items and tasks" },
+    "meetings": { "schema": "Meeting", "description": "Scheduled meetings" },
+    "user_settings": { "schema": "UserSettings", "description": "User preferences" },
+    "plans": { "schema": "Plan", "description": "Operational plans" },
+    "systems": { "schema": "System", "description": "Operational systems" },
+    "resource_hub": { "schema": "Resource", "description": "Resource hub items" },
+    "team_members": { "schema": "TeamMember", "description": "Team members" },
+    "team_updates": { "schema": "TeamUpdate", "description": "Team activity log" }
   }
 }
