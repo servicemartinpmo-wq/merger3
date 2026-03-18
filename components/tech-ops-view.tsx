@@ -376,7 +376,7 @@ export function TechOpsView() {
   }
 
   return (
-    <div className="space-y-8 font-sans text-slate-900 min-h-[calc(100vh-8rem)] p-10 rounded-3xl laminated-surface glass-reflection border border-black/10">
+    <div className="space-y-8 font-sans text-white bg-slate-900 min-h-[calc(100vh-8rem)] p-10 rounded-3xl border border-white/10">
       {/* Header Section */}
       <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 border-b border-black/5 pb-10">
         <div className="space-y-3">
@@ -384,7 +384,7 @@ export function TechOpsView() {
             <div className="w-12 h-12 rounded-2xl bg-showroom-accent/10 border border-showroom-accent/20 flex items-center justify-center">
               <Terminal className="text-showroom-accent" size={24} />
             </div>
-            <h1 className="text-4xl font-display font-light tracking-tight text-slate-900">Tech-Ops Command</h1>
+            <h1 className="text-4xl font-display font-light tracking-tight text-white">Tech-Ops Command</h1>
           </div>
           <p className="text-slate-600 max-w-xl text-base leading-relaxed font-light">
             Real-time monitoring of infrastructure signals, support tickets, and system health.

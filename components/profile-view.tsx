@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { 
   Building2, 
   Users, 
@@ -54,7 +55,7 @@ export function ProfileView() {
   ] as const;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 min-h-[700px]">
+    <div className="flex flex-col lg:flex-row gap-8 min-h-screen bg-slate-900 p-8 text-white">
       {/* Sidebar Navigation */}
       <aside className="lg:w-72 space-y-2">
         <div className="px-4 py-6">
@@ -224,16 +225,23 @@ export function ProfileView() {
                     <div className="space-y-2">
                       <label className="text-xs font-mono uppercase tracking-widest text-slate-400">Logo Configuration</label>
                       <div className="p-8 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center gap-4 bg-slate-50/50">
-                        <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center text-slate-300">
-                          <Upload size={24} />
+                        <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                          <Image 
+                            src="https://drive.google.com/uc?id=18b3DTRptB-KV75a8ukiUJGw19f_2CB_k" 
+                            alt="Venture-OS Logo" 
+                            width={64} 
+                            height={64} 
+                            className="object-contain"
+                            referrerPolicy="no-referrer"
+                          />
                         </div>
                         <div className="text-center">
-                          <p className="text-sm font-medium">Drop your logo here</p>
+                          <p className="text-sm font-medium">Current Logo</p>
                           <p className="text-xs text-slate-400">SVG, PNG or JPG (max 2MB)</p>
                         </div>
                         {isEditing && (
                           <button className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-slate-50 transition-colors">
-                            Select File
+                            Change Logo
                           </button>
                         )}
                       </div>

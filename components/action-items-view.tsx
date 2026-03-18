@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, AlertTriangle, CheckCircle2, FileText, Upload, Brain, Loader2 } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle2, FileText, Upload, Brain, Loader2, Plus } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import { statusConfig } from '@/lib/status-colors';
 import { supabase } from '@/lib/supabase';
-import { useSupabase } from './supabase-provider';
+import { useSupabase } from '@/components/supabase-provider';
+import { dataService } from '@/lib/services/data-service';
 
 export function ActionItemsView({ setView, setSelectedEmailId }: { setView: any, setSelectedEmailId: any }) {
   const { user } = useSupabase();
@@ -20,14 +21,18 @@ export function ActionItemsView({ setView, setSelectedEmailId }: { setView: any,
     if (!user) return;
 
     const fetchData = async () => {
-      const [itemsRes, meetingsRes] = await Promise.all([
-        supabase.from('action_items').select('*').order('created_at', { ascending: false }),
-        supabase.from('meetings').select('*').order('created_at', { ascending: false })
-      ]);
-
-      if (itemsRes.data) setActionItems(itemsRes.data);
-      if (meetingsRes.data) setMeetings(meetingsRes.data);
-      setIsLoading(false);
+      try {
+        const [itemsData, meetingsData] = await Promise.all([
+          dataService.getItems<any>('action_items', user.id),
+          dataService.getItems<any>('meetings', user.id)
+        ]);
+        setActionItems(itemsData);
+        setMeetings(meetingsData);
+      } catch (error) {
+        console.error('Error fetching action items/meetings:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
@@ -93,13 +98,15 @@ export function ActionItemsView({ setView, setSelectedEmailId }: { setView: any,
       const parsed = JSON.parse(response.text || '{}');
       
       if (parsed.actionItems) {
-        const itemsToInsert = parsed.actionItems.map((item: any) => ({ ...item, user_id: user.id }));
-        await supabase.from('action_items').insert(itemsToInsert);
+        for (const item of parsed.actionItems) {
+          await dataService.createItem('action_items', { ...item, user_id: user.id }, user.id);
+        }
       }
       
       if (parsed.meetings) {
-        const meetingsToInsert = parsed.meetings.map((item: any) => ({ ...item, user_id: user.id }));
-        await supabase.from('meetings').insert(meetingsToInsert);
+        for (const mtg of parsed.meetings) {
+          await dataService.createItem('meetings', { ...mtg, user_id: user.id }, user.id);
+        }
       }
 
       setBrainDump('');
@@ -119,7 +126,7 @@ export function ActionItemsView({ setView, setSelectedEmailId }: { setView: any,
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 bg-slate-900 p-8 min-h-screen">
       <div className="flex items-center justify-between">
         <h2 className="font-display text-2xl font-light text-white">Action Items & Events</h2>
         {actionItems.length === 0 && (

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Cpu, ChevronRight, Loader2 } from 'lucide-react';
+import { Search, Cpu, ChevronRight, Loader2, Plus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useSupabase } from './supabase-provider';
+import { useSupabase } from '@/components/supabase-provider';
+import { dataService } from '@/lib/services/data-service';
 import coreSystemsData from '@/data/core-systems.json';
 
 export function SystemsView() {
@@ -17,17 +18,14 @@ export function SystemsView() {
     if (!user) return;
 
     const fetchSystems = async () => {
-      const { data, error } = await supabase
-        .from('systems')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
+      try {
+        const data = await dataService.getItems<any>('systems', user.id);
+        setSystems(data);
+      } catch (error) {
         console.error('Error fetching systems:', error);
-      } else {
-        setSystems(data || []);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     fetchSystems();
@@ -76,7 +74,7 @@ export function SystemsView() {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 bg-slate-900 p-8 min-h-screen">
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div className="space-y-4">
           <h1 className="text-4xl font-display text-white tracking-tight">PMO-Ops Command Center</h1>

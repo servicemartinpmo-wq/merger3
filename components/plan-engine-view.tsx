@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Calendar, AlertTriangle, TrendingUp, CheckCircle, Loader2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useSupabase } from './supabase-provider';
+import { useSupabase } from '@/components/supabase-provider';
 
 export function PlanEngineView() {
   const { user } = useSupabase();
@@ -68,7 +68,7 @@ export function PlanEngineView() {
   }
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-8 space-y-8 bg-slate-900 min-h-screen">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-display text-white">Recurring Plan Engine</h1>
         <div className="flex gap-4">

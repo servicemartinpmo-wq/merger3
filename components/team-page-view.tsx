@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Activity, Shield, Loader2, MessageSquare, Plus } from 'lucide-react';
+import { Users, Activity, Shield, Loader2, MessageSquare, Plus, UserPlus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useSupabase } from './supabase-provider';
+import { useSupabase } from '@/components/supabase-provider';
+import { dataService } from '@/lib/services/data-service';
 
 // MOCHA Role Colors
 const MOCHA_COLORS = {
@@ -21,19 +22,25 @@ export function TeamPageView() {
   const [updates, setUpdates] = useState<any[]>([]);
   const [mocha, setMocha] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddingMember, setIsAddingMember] = useState(false);
+  const [newMember, setNewMember] = useState({ name: '', role: 'Owner' });
 
   useEffect(() => {
     if (!user) return;
 
     const fetchData = async () => {
-      const [updatesRes, mochaRes] = await Promise.all([
-        supabase.from('team_updates').select('*').order('created_at', { ascending: false }).limit(10),
-        supabase.from('team_members').select('*').order('created_at', { ascending: true })
-      ]);
-
-      if (updatesRes.data) setUpdates(updatesRes.data);
-      if (mochaRes.data) setMocha(mochaRes.data);
-      setIsLoading(false);
+      try {
+        const [updatesData, mochaData] = await Promise.all([
+          dataService.getItems<any>('team_updates', user.id),
+          dataService.getItems<any>('team_members', user.id)
+        ]);
+        setUpdates(updatesData);
+        setMocha(mochaData);
+      } catch (error) {
+        console.error('Error fetching team data:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
@@ -67,16 +74,37 @@ export function TeamPageView() {
     };
   }, [user]);
 
+  const handleAddMember = async () => {
+    if (!user || !newMember.name) return;
+    try {
+      const member = await dataService.createItem('team_members', {
+        ...newMember,
+        user_id: user.id
+      }, user.id);
+      setMocha(prev => [...prev, member]);
+      setNewMember({ name: '', role: 'Owner' });
+      setIsAddingMember(false);
+    } catch (error) {
+      console.error('Error adding team member:', error);
+    }
+  };
+
   if (isLoading) return <div className="flex justify-center p-10"><Loader2 className="animate-spin text-showroom-accent" /></div>;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 bg-slate-900 p-8 min-h-screen">
       <header className="flex justify-between items-end">
         <div>
           <h1 className="text-4xl font-display text-white tracking-tight">Team Page</h1>
           <p className="text-slate-400">Real-time updates and MOCHA accountability.</p>
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setIsAddingMember(true)}
+            className="flex items-center gap-2 bg-showroom-accent text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-showroom-accent/90 transition-all shadow-lg shadow-showroom-accent/20"
+          >
+            <UserPlus size={16} /> Add Member
+          </button>
           {mocha.length === 0 && (
             <button
               onClick={async () => {
@@ -132,6 +160,52 @@ export function TeamPageView() {
         {/* MOCHA */}
         <section className="space-y-6">
           <h2 className="text-xl font-medium flex items-center gap-3 text-white"><Shield size={20} className="text-showroom-accent" /> MOCHA Framework</h2>
+          
+          {isAddingMember && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-6 bg-white/5 border border-white/10 rounded-3xl space-y-4 glass-reflection"
+            >
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Member Name</label>
+                <input 
+                  type="text" 
+                  value={newMember.name}
+                  onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+                  placeholder="e.g. Sarah J."
+                  className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white outline-none focus:border-showroom-accent transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Role</label>
+                <select 
+                  value={newMember.role}
+                  onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+                  className="w-full p-3 bg-slate-800 border border-white/10 rounded-xl text-sm text-white outline-none focus:border-showroom-accent transition-all"
+                >
+                  {Object.keys(MOCHA_COLORS).map(role => (
+                    <option key={role} value={role}>{role}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button 
+                  onClick={handleAddMember}
+                  className="flex-1 py-2 bg-showroom-accent text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-showroom-accent/90 transition-all"
+                >
+                  Save Member
+                </button>
+                <button 
+                  onClick={() => setIsAddingMember(false)}
+                  className="px-4 py-2 bg-white/5 text-slate-400 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          )}
+
           <div className="space-y-3">
             {mocha.map((m: any, i: number) => (
               <motion.div 

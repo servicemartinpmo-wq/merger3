@@ -139,9 +139,9 @@ export function OpsMonitorView() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-white rounded-3xl shadow-sm border border-slate-200">
-        <div className="flex flex-col items-center gap-4 text-slate-500">
-          <Loader2 size={32} className="animate-spin text-indigo-600" />
+      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-slate-900 rounded-3xl shadow-sm border border-white/10">
+        <div className="flex flex-col items-center gap-4 text-slate-400">
+          <Loader2 size={32} className="animate-spin text-showroom-accent" />
           <p>Apphia Engine is analyzing operational status...</p>
         </div>
       </div>
@@ -150,16 +150,16 @@ export function OpsMonitorView() {
 
   if (!report) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-white rounded-3xl shadow-sm border border-slate-200 text-slate-500">
+      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-slate-900 rounded-3xl shadow-sm border border-white/10 text-slate-400">
         Failed to load operational status.
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 font-sans text-slate-900 bg-white min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-slate-200">
-      <header className="border-b border-slate-200 pb-6">
-        <h1 className="font-serif text-3xl font-medium tracking-tight text-slate-900 mb-2">
+    <div className="space-y-8 font-sans text-white bg-slate-900 min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-white/10">
+      <header className="border-b border-white/10 pb-6">
+        <h1 className="font-serif text-3xl font-medium tracking-tight text-white mb-2">
           Operational Status Monitor
         </h1>
         <p className="text-slate-500 max-w-2xl text-base">

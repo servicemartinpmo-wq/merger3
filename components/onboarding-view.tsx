@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { GoogleGenAI } from '@google/genai';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -9,7 +10,6 @@ import {
   Building2, 
   Target, 
   Users2, 
-  Rocket,
   ChevronRight,
   ChevronLeft,
   Sparkles,
@@ -309,8 +309,15 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                 <div className="space-y-4">
                   <AnimatedBorder className="w-full" isActive={formData.documents.length > 0}>
                     <div className="border-2 border-dashed border-slate-200 rounded-3xl p-12 text-center hover:border-slate-400 transition-all cursor-pointer bg-slate-50 group" onClick={() => document.getElementById('file-upload')?.click()}>
-                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                        <Rocket size={24} className="text-slate-400" />
+                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform overflow-hidden">
+                        <Image 
+                          src="https://drive.google.com/uc?id=18b3DTRptB-KV75a8ukiUJGw19f_2CB_k" 
+                          alt="Venture-OS Logo" 
+                          width={24} 
+                          height={24} 
+                          className="opacity-40"
+                          referrerPolicy="no-referrer"
+                        />
                       </div>
                       <p className="text-sm font-medium text-slate-900">Click to upload or drag and drop</p>
                       <p className="text-xs text-slate-500 mt-1">PDF, DOCX, TXT (Max 10MB)</p>
@@ -420,8 +427,15 @@ export function OnboardingView({ onComplete }: OnboardingProps) {
                 className="space-y-8"
               >
                 <div className="space-y-2 text-center">
-                  <div className="w-20 h-20 rounded-3xl bg-emerald-500 text-white flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-emerald-500/20">
-                    <Rocket size={40} className="animate-bounce" />
+                  <div className="w-20 h-20 rounded-3xl bg-slate-900 text-white flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-slate-900/20 overflow-hidden">
+                    <Image 
+                      src="https://drive.google.com/uc?id=18b3DTRptB-KV75a8ukiUJGw19f_2CB_k" 
+                      alt="Venture-OS Logo" 
+                      width={48} 
+                      height={48} 
+                      className="animate-bounce"
+                      referrerPolicy="no-referrer"
+                    />
                   </div>
                   <h2 className="text-4xl font-serif font-medium tracking-tight text-slate-950">Ready for liftoff</h2>
                   <p className="text-slate-500 max-w-md mx-auto">

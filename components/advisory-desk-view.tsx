@@ -133,11 +133,11 @@ export function AdvisoryDeskView() {
   };
 
   return (
-    <div className="space-y-8 font-sans text-slate-900 bg-white min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 pb-8 shrink-0">
+    <div className="space-y-8 font-sans text-white bg-slate-900 min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-white/10 flex flex-col">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8 shrink-0">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="font-serif text-4xl font-medium tracking-tight text-slate-900">
+            <h1 className="font-serif text-4xl font-medium tracking-tight text-white">
               Advisory Desk
             </h1>
             <span className="flex items-center gap-1.5 px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-widest rounded-full border border-teal-200">

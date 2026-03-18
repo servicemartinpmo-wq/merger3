@@ -46,7 +46,7 @@ export function FreelanceKanbanView() {
   const [columns, setColumns] = useState(initialTasks);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-slate-900 p-8 min-h-screen text-white">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1">
           <h2 className="text-3xl font-serif font-medium tracking-tight">Project Pipeline</h2>

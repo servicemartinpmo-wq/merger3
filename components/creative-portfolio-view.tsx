@@ -83,7 +83,7 @@ export function CreativePortfolioView() {
   const categories = ['All', 'Motion Design', 'Identity', 'UI/UX', 'Photography', '3D Art'];
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 bg-slate-900 p-8 min-h-screen text-white">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="space-y-4">

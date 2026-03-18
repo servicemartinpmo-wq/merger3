@@ -86,16 +86,16 @@ export function DiagnosticsView() {
 
   if (!report) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-white rounded-3xl shadow-sm border border-slate-200 text-slate-500">
+      <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] bg-slate-900 rounded-3xl shadow-sm border border-white/10 text-slate-400">
         Failed to load diagnostics.
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 font-sans text-slate-900 bg-white min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-slate-200">
-      <header className="border-b border-slate-200 pb-6">
-        <h1 className="font-serif text-3xl font-medium tracking-tight text-slate-900 mb-2">
+    <div className="space-y-8 font-sans text-white bg-slate-900 min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-white/10">
+      <header className="border-b border-white/10 pb-6">
+        <h1 className="font-serif text-3xl font-medium tracking-tight text-white mb-2">
           Organizational Diagnostics
         </h1>
         <p className="text-slate-500 max-w-2xl text-base">

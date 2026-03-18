@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, BookOpen, GitMerge, FileText, ArrowRight, Download, Loader2 } from 'lucide-react';
+import { Search, Filter, BookOpen, GitMerge, FileText, ArrowRight, Download, Loader2, Plus } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useSupabase } from './supabase-provider';
+import { useSupabase } from '@/components/supabase-provider';
+import { dataService } from '@/lib/services/data-service';
 import resourceData from '@/data/resource-hub-data.json';
 
 export function ResourceHubView() {
@@ -18,17 +19,14 @@ export function ResourceHubView() {
     if (!user) return;
 
     const fetchResources = async () => {
-      const { data, error } = await supabase
-        .from('resource_hub')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
+      try {
+        const data = await dataService.getItems<any>('resource_hub', user.id);
+        setResources(data);
+      } catch (error) {
         console.error('Error fetching resources:', error);
-      } else {
-        setResources(data || []);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     fetchResources();
@@ -81,7 +79,7 @@ export function ResourceHubView() {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 bg-slate-900 p-8 min-h-screen">
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div className="space-y-4">
           <h1 className="text-4xl font-display text-white tracking-tight">Resource Hub</h1>

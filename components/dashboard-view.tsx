@@ -10,7 +10,12 @@ import { AssistedTooltip } from '@/components/assisted-tooltip';
 import { Trophy, Zap, Moon, Sun, Plus } from 'lucide-react';
 import { BannerCarousel } from '@/components/banner-carousel';
 
+import { useApphia } from '@/hooks/use-apphia';
+import { Signal, Advisory } from '@/lib/apphia/kernel';
+import { AlertCircle, Info, CheckCircle, Loader2, Sparkles } from 'lucide-react';
+
 export function DashboardView({ assistedMode }: { assistedMode: boolean }) {
+  const { signals, advisories, isLoading, error, refresh } = useApphia();
   const today = new Date();
   const day = today.getDay();
   let content = { title: '', content: '', teamWins: [] as string[] };
@@ -54,7 +59,7 @@ export function DashboardView({ assistedMode }: { assistedMode: boolean }) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-slate-900 p-8 min-h-screen text-white">
       {/* Banner Section */}
       <div className="p-8 rounded-3xl bg-slate-900 text-white border border-white/10 space-y-6">
         <div className="flex items-center justify-between">
@@ -62,6 +67,66 @@ export function DashboardView({ assistedMode }: { assistedMode: boolean }) {
         </div>
         
         <BannerCarousel />
+
+        {/* Apphia Signals & Advisories */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium flex items-center gap-2">
+                <Zap className="text-yellow-400 w-5 h-5" />
+                Operational Signals
+              </h2>
+              {isLoading && <Loader2 className="w-4 h-4 animate-spin text-slate-400" />}
+            </div>
+            <div className="space-y-3">
+              {signals.length === 0 && !isLoading && (
+                <p className="text-sm text-slate-500 italic">No critical signals detected.</p>
+              )}
+              {signals.map(signal => (
+                <div key={signal.id} className={`p-3 rounded-lg text-sm flex items-start gap-3 ${
+                  signal.severity === 'high' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                  signal.severity === 'medium' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' :
+                  'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                }`}>
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium">{signal.message}</p>
+                    <p className="text-xs opacity-70 mt-1">{new Date(signal.timestamp).toLocaleTimeString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+            <h2 className="text-lg font-medium flex items-center gap-2 mb-4">
+              <Sparkles className="text-blue-400 w-5 h-5" />
+              Apphia Advisory
+            </h2>
+            <div className="space-y-3">
+              {advisories.length === 0 && !isLoading && (
+                <p className="text-sm text-slate-500 italic">No strategic advisories available.</p>
+              )}
+              {advisories.map((advisory, idx) => (
+                <div key={idx} className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/10 text-sm">
+                  <div className="flex items-start gap-3">
+                    <Info className="text-blue-400 w-4 h-4 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-slate-200">{advisory.guidance}</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {advisory.actions.map((action, aidx) => (
+                          <span key={aidx} className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-300 text-[10px] font-medium uppercase tracking-wider">
+                            {action}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex items-center gap-4">

@@ -1,1 +1,9 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --color-showroom-bg: #0f172a;
+  --color-showroom-accent: #2dd4bf;
+  --color-showroom-border: rgba(255, 255, 255, 0.1);
+}

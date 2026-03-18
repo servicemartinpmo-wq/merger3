@@ -5,7 +5,7 @@ import insightsData from '@/data/learning-engine.json';
 
 export function LearningEngineView() {
   return (
-    <section className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm">
+    <section className="bg-slate-900 border border-white/10 p-8 rounded-3xl shadow-sm text-white min-h-screen">
       <div className="flex items-center gap-3 mb-6">
         <BrainCircuit className="text-indigo-600" size={24} />
         <h2 className="text-xl font-serif">Cross-Company Learning Engine</h2>

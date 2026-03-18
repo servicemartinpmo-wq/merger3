@@ -18,7 +18,7 @@ export function FounderDashboardView() {
   const healthReport = calculateOperationalHealth(mockHealthData);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-slate-900 p-8 min-h-screen text-white">
       <header className="space-y-2">
         <h1 className="text-4xl font-serif font-medium tracking-tight">Founder Mode</h1>
         <p className="text-slate-500">McKinsey-grade insights for your startup.</p>
