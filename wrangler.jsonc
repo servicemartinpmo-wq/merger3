@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "merger3",
+  "compatibility_date": "2025-09-27",
+  "observability": {
+    "enabled": true
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "bindings": [
+    {
+      "type": "service",
+      "name": "WORKER_SELF_REFERENCE",
+      "service": "merger3"
+    }
+  ]
+}
