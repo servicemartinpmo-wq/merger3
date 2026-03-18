@@ -1,0 +1,13 @@
+node_modules/
+.next/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+.wrangler
+.open-next
+.dev.vars
+wrangler.jsonc
+open-next.config.ts
+public/_headers

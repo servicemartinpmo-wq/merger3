@@ -1,0 +1,24 @@
+{
+  "advisors": {
+    "Healthcare": {
+      "kpis": ["Patient Wait Time", "Readmission Rate", "Bed Occupancy"],
+      "frameworks": ["HIPAA Compliance", "Value-Based Care"]
+    },
+    "Engineering": {
+      "kpis": ["Deployment Frequency", "Lead Time for Changes", "Change Failure Rate"],
+      "frameworks": ["DORA Metrics", "Agile/Scrum"]
+    },
+    "Startup": {
+      "kpis": ["Burn Rate", "CAC", "LTV", "Monthly Recurring Revenue"],
+      "frameworks": ["Lean Startup", "OKRs"]
+    },
+    "Enterprise": {
+      "kpis": ["EBITDA", "Market Share", "Customer Retention Rate"],
+      "frameworks": ["Balanced Scorecard", "Six Sigma"]
+    },
+    "Manufacturing": {
+      "kpis": ["OEE", "Cycle Time", "Defect Rate"],
+      "frameworks": ["Lean Manufacturing", "TPS"]
+    }
+  }
+}
