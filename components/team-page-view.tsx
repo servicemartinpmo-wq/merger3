@@ -9,11 +9,11 @@ import { dataService } from '@/lib/services/data-service';
 
 // MOCHA Role Colors
 const MOCHA_COLORS = {
-  Manager: 'bg-rose-500/10 text-rose-600 border-rose-500/20',
-  Owner: 'bg-showroom-accent/10 text-showroom-accent border-showroom-accent/20',
-  Consulted: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
-  Helped: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-  Accountable: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
+  Manager: 'bg-rose-50 text-rose-600 border-rose-100',
+  Owner: 'bg-indigo-50 text-indigo-600 border-indigo-100',
+  Consulted: 'bg-amber-50 text-amber-600 border-amber-100',
+  Helped: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+  Accountable: 'bg-purple-50 text-purple-600 border-purple-100',
 };
 
 export function TeamPageView() {
@@ -89,19 +89,19 @@ export function TeamPageView() {
     }
   };
 
-  if (isLoading) return <div className="flex justify-center p-10"><Loader2 className="animate-spin text-showroom-accent" /></div>;
+  if (isLoading) return <div className="flex justify-center p-10"><Loader2 className="animate-spin text-indigo-600" /></div>;
 
   return (
-    <div className="space-y-10 bg-slate-900 p-8 min-h-screen">
-      <header className="flex justify-between items-end">
-        <div>
-          <h1 className="text-4xl font-display text-white tracking-tight">Team Page</h1>
-          <p className="text-slate-400">Real-time updates and MOCHA accountability.</p>
+    <div className="space-y-10 max-w-7xl mx-auto">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Department & Team</h1>
+          <p className="text-slate-500">Real-time updates and MOCHA accountability matrix.</p>
         </div>
         <div className="flex items-center gap-4">
           <button 
             onClick={() => setIsAddingMember(true)}
-            className="flex items-center gap-2 bg-showroom-accent text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-showroom-accent/90 transition-all shadow-lg shadow-showroom-accent/20"
+            className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
           >
             <UserPlus size={16} /> Add Member
           </button>
@@ -123,12 +123,12 @@ export function TeamPageView() {
                 await supabase.from('team_members').insert(demoMembers);
                 await supabase.from('team_updates').insert(demoUpdates);
               }}
-              className="text-[10px] font-mono uppercase tracking-widest text-showroom-accent hover:underline"
+              className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 px-4 py-2 rounded-lg"
             >
               Seed Demo Data
             </button>
           )}
-          <select value={teamSize} onChange={(e) => setTeamSize(e.target.value)} className="p-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white glass-reflection outline-none">
+          <select value={teamSize} onChange={(e) => setTeamSize(e.target.value)} className="p-3 bg-white border border-slate-200 rounded-xl text-xs font-bold uppercase tracking-widest text-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
             <option value="1">1 (Solo)</option>
             <option value="2-10">2–10</option>
             <option value="11-50">11–50</option>
@@ -138,51 +138,70 @@ export function TeamPageView() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* User Updates */}
         <section className="lg:col-span-2 space-y-6">
-          <h2 className="text-xl font-medium flex items-center gap-3 text-white"><Activity size={20} className="text-showroom-accent" /> User Updates</h2>
-          <div className="space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+              <Activity size={14} className="text-indigo-600" /> 
+              Live Activity
+            </h2>
+          </div>
+          <div className="space-y-3">
             {updates.map((u: any) => (
               <motion.div 
                 key={u.id}
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="p-6 bg-white/5 border border-white/10 rounded-3xl flex justify-between items-center glass-reflection"
+                className="p-5 bg-white border border-slate-200 rounded-2xl flex justify-between items-center shadow-sm hover:shadow-md transition-all"
               >
-                <p className="text-white"><span className="font-bold">{u.user_name}</span> {u.action} <span className="text-showroom-accent">{u.target}</span></p>
-                <span className="text-xs text-slate-500 font-mono">{new Date(u.created_at).toLocaleTimeString()}</span>
+                <p className="text-sm text-slate-900 font-medium">
+                  <span className="font-bold">{u.user_name}</span> 
+                  <span className="mx-1 text-slate-400">{u.action}</span> 
+                  <span className="text-indigo-600 font-bold">{u.target}</span>
+                </p>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{new Date(u.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </motion.div>
             ))}
+            {updates.length === 0 && (
+              <div className="text-center py-12 border-2 border-dashed border-slate-100 rounded-2xl">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">No recent activity</p>
+              </div>
+            )}
           </div>
         </section>
 
         {/* MOCHA */}
         <section className="space-y-6">
-          <h2 className="text-xl font-medium flex items-center gap-3 text-white"><Shield size={20} className="text-showroom-accent" /> MOCHA Framework</h2>
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+              <Shield size={14} className="text-indigo-600" /> 
+              MOCHA Matrix
+            </h2>
+          </div>
           
           {isAddingMember && (
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 bg-white/5 border border-white/10 rounded-3xl space-y-4 glass-reflection"
+              className="p-6 bg-slate-50 border border-slate-200 rounded-2xl space-y-4"
             >
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Member Name</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Member Name</label>
                 <input 
                   type="text" 
                   value={newMember.name}
                   onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
                   placeholder="e.g. Sarah J."
-                  className="w-full p-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white outline-none focus:border-showroom-accent transition-all"
+                  className="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium"
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Role</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Role</label>
                 <select 
                   value={newMember.role}
                   onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-                  className="w-full p-3 bg-slate-800 border border-white/10 rounded-xl text-sm text-white outline-none focus:border-showroom-accent transition-all"
+                  className="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium"
                 >
                   {Object.keys(MOCHA_COLORS).map(role => (
                     <option key={role} value={role}>{role}</option>
@@ -192,13 +211,13 @@ export function TeamPageView() {
               <div className="flex gap-2 pt-2">
                 <button 
                   onClick={handleAddMember}
-                  className="flex-1 py-2 bg-showroom-accent text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-showroom-accent/90 transition-all"
+                  className="flex-1 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
                 >
                   Save Member
                 </button>
                 <button 
                   onClick={() => setIsAddingMember(false)}
-                  className="px-4 py-2 bg-white/5 text-slate-400 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-all"
+                  className="px-4 py-3 bg-white border border-slate-200 text-slate-400 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all"
                 >
                   Cancel
                 </button>
@@ -212,12 +231,18 @@ export function TeamPageView() {
                 key={m.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`p-4 rounded-2xl border glass-reflection ${MOCHA_COLORS[m.role as keyof typeof MOCHA_COLORS]}`}
+                whileHover={{ x: 4 }}
+                className={`p-5 rounded-2xl border shadow-sm transition-all ${MOCHA_COLORS[m.role as keyof typeof MOCHA_COLORS]}`}
               >
-                <div className="text-xs font-bold uppercase tracking-widest mb-1">{m.role}</div>
-                <div className="font-medium">{m.name}</div>
+                <div className="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70">{m.role}</div>
+                <div className="font-bold text-sm tracking-tight">{m.name}</div>
               </motion.div>
             ))}
+            {mocha.length === 0 && !isAddingMember && (
+              <div className="text-center py-12 border-2 border-dashed border-slate-100 rounded-2xl">
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">No team members defined</p>
+              </div>
+            )}
           </div>
         </section>
       </div>

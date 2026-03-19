@@ -4,9 +4,12 @@
  * Implements the four-stage pipeline: Signal Detection -> Diagnosis -> Advisory -> Structural Remedies.
  */
 
+import { GoogleGenAI } from "@google/genai";
+import { knowledgeService } from '../services/knowledge-service';
+
 export interface Signal {
   id: string;
-  type: 'capacity' | 'delay' | 'conflict' | 'risk' | 'performance';
+  type: 'capacity' | 'delay' | 'conflict' | 'risk' | 'performance' | 'strategic';
   severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   metadata: any;
@@ -18,6 +21,7 @@ export interface Diagnosis {
   rootCause: string;
   frameworkUsed: string;
   confidence: number;
+  analysis?: string;
 }
 
 export interface Advisory {
@@ -25,6 +29,7 @@ export interface Advisory {
   guidance: string;
   priority: number;
   actions: string[];
+  rationale?: string;
 }
 
 export interface StructuralRemedy {
@@ -36,8 +41,11 @@ export interface StructuralRemedy {
 
 export class ApphiaKernel {
   private static instance: ApphiaKernel;
+  private ai: GoogleGenAI;
 
-  private constructor() {}
+  private constructor() {
+    this.ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || '' });
+  }
 
   public static getInstance(): ApphiaKernel {
     if (!ApphiaKernel.instance) {
@@ -101,65 +109,145 @@ export class ApphiaKernel {
       }
     }
 
+    // 4. AI-Powered Strategic Signal Detection
+    try {
+      const knowledge = await knowledgeService.getKnowledgeByModule('Signal');
+      const response = await this.ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: `Analyze the following operational data and detect strategic signals based on these knowledge bases: ${JSON.stringify(knowledge)}.
+        Data: ${JSON.stringify(data)}
+        Return a JSON array of signals with fields: type, severity, message.`,
+        config: { responseMimeType: "application/json" }
+      });
+
+      const aiSignals = JSON.parse(response.text || '[]');
+      aiSignals.forEach((s: any) => {
+        signals.push({
+          id: crypto.randomUUID(),
+          type: s.type || 'strategic',
+          severity: s.severity || 'medium',
+          message: s.message,
+          metadata: { source: 'AI_REASONING' },
+          timestamp: new Date()
+        });
+      });
+    } catch (error) {
+      console.error("AI Signal Detection failed:", error);
+    }
+
     return signals;
   }
 
   /**
-   * Diagnoses detected signals using management frameworks.
+   * Diagnoses detected signals using management frameworks and AI.
    */
   public async diagnose(signals: Signal[]): Promise<Diagnosis[]> {
-    return signals.map(signal => {
-      let rootCause = '';
-      let frameworkUsed = '';
-      
-      switch (signal.type) {
-        case 'capacity':
-          rootCause = 'Poor resource allocation and initiative over-commitment.';
-          frameworkUsed = 'Theory of Constraints';
-          break;
-        case 'delay':
-          rootCause = 'Operational friction and lack of accountability.';
-          frameworkUsed = 'Lean Six Sigma';
-          break;
-        case 'conflict':
-          rootCause = 'Misaligned departmental objectives and siloed planning.';
-          frameworkUsed = 'Balanced Scorecard';
-          break;
-        default:
-          rootCause = 'General operational variance.';
-          frameworkUsed = 'Root Cause Analysis';
-      }
+    const diagnoses: Diagnosis[] = [];
 
-      return {
-        signalId: signal.id,
-        rootCause,
-        frameworkUsed,
-        confidence: 0.85
-      };
-    });
+    for (const signal of signals) {
+      try {
+        const knowledge = await knowledgeService.getKnowledgeByModule('Diagnosis');
+        const response = await this.ai.models.generateContent({
+          model: "gemini-3-flash-preview",
+          contents: `Diagnose this operational signal: ${signal.message}. 
+          Use these frameworks/knowledge: ${JSON.stringify(knowledge)}.
+          Return JSON with fields: rootCause, frameworkUsed, confidence (0-1), analysis.`,
+          config: { responseMimeType: "application/json" }
+        });
+
+        const result = JSON.parse(response.text || '{}');
+        diagnoses.push({
+          signalId: signal.id,
+          rootCause: result.rootCause || 'Unknown root cause',
+          frameworkUsed: result.frameworkUsed || 'General Analysis',
+          confidence: result.confidence || 0.7,
+          analysis: result.analysis
+        });
+      } catch (error) {
+        console.error(`Diagnosis failed for signal ${signal.id}:`, error);
+        // Fallback to basic logic
+        diagnoses.push({
+          signalId: signal.id,
+          rootCause: 'Manual analysis required due to reasoning engine timeout.',
+          frameworkUsed: 'Fallback Logic',
+          confidence: 0.5
+        });
+      }
+    }
+
+    return diagnoses;
   }
 
   /**
    * Generates advisory guidance based on diagnoses.
    */
   public async generateAdvisory(diagnoses: Diagnosis[]): Promise<Advisory[]> {
-    return diagnoses.map(diagnosis => ({
-      diagnosisId: diagnosis.signalId,
-      guidance: `Strategic recommendation based on ${diagnosis.frameworkUsed}: Address ${diagnosis.rootCause.toLowerCase()}`,
-      priority: 1,
-      actions: ['Review resource allocation', 'Adjust timeline', 'Align stakeholders']
-    }));
+    const advisories: Advisory[] = [];
+
+    for (const diagnosis of diagnoses) {
+      try {
+        const knowledge = await knowledgeService.getKnowledgeByModule('Advisory');
+        const response = await this.ai.models.generateContent({
+          model: "gemini-3-flash-preview",
+          contents: `Generate a strategic advisory for this diagnosis: ${diagnosis.rootCause}.
+          Context: ${diagnosis.analysis}.
+          Knowledge: ${JSON.stringify(knowledge)}.
+          Return JSON with fields: guidance, priority (1-5), actions (array of strings), rationale.`,
+          config: { responseMimeType: "application/json" }
+        });
+
+        const result = JSON.parse(response.text || '{}');
+        advisories.push({
+          diagnosisId: diagnosis.signalId,
+          guidance: result.guidance || 'Review operational parameters.',
+          priority: result.priority || 3,
+          actions: result.actions || ['Consult with department leads'],
+          rationale: result.rationale
+        });
+      } catch (error) {
+        console.error(`Advisory generation failed for diagnosis ${diagnosis.signalId}:`, error);
+        advisories.push({
+          diagnosisId: diagnosis.signalId,
+          guidance: 'Standard operational review recommended.',
+          priority: 3,
+          actions: ['Manual review']
+        });
+      }
+    }
+
+    return advisories;
   }
 
   /**
    * Proposes structural remedies for long-term improvement.
    */
   public async proposeRemedies(advisories: Advisory[]): Promise<StructuralRemedy[]> {
-    return advisories.map(advisory => ({
-      advisoryId: advisory.diagnosisId,
-      remedyType: 'process_optimization',
-      description: 'Implement a more rigorous initiative intake process to prevent capacity overloads.',
-      impact: 'Reduces operational friction by 15% and improves delivery predictability.'
-    }));
+    const remedies: StructuralRemedy[] = [];
+
+    for (const advisory of advisories) {
+      try {
+        const knowledge = await knowledgeService.getKnowledgeByModule('Structural');
+        const response = await this.ai.models.generateContent({
+          model: "gemini-3-flash-preview",
+          contents: `Propose a structural remedy for this advisory: ${advisory.guidance}.
+          Rationale: ${advisory.rationale}.
+          Knowledge: ${JSON.stringify(knowledge)}.
+          Return JSON with fields: remedyType (org_redesign, process_optimization, resource_reallocation, strategic_pivot), description, impact.`,
+          config: { responseMimeType: "application/json" }
+        });
+
+        const result = JSON.parse(response.text || '{}');
+        remedies.push({
+          advisoryId: advisory.diagnosisId,
+          remedyType: result.remedyType || 'process_optimization',
+          description: result.description || 'General process improvement.',
+          impact: result.impact || 'Long-term stability improvement.'
+        });
+      } catch (error) {
+        console.error(`Remedy proposal failed for advisory ${advisory.diagnosisId}:`, error);
+      }
+    }
+
+    return remedies;
   }
 }

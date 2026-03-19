@@ -133,80 +133,81 @@ export function AdvisoryDeskView() {
   };
 
   return (
-    <div className="space-y-8 font-sans text-white bg-slate-900 min-h-[calc(100vh-8rem)] p-8 rounded-3xl shadow-sm border border-white/10 flex flex-col">
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8 shrink-0">
+    <div className="space-y-8 max-w-7xl mx-auto flex flex-col h-[calc(100vh-8rem)]">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 shrink-0">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="font-serif text-4xl font-medium tracking-tight text-white">
-              Advisory Desk
-            </h1>
-            <span className="flex items-center gap-1.5 px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold uppercase tracking-widest rounded-full border border-teal-200">
-              <Cpu size={14} className="animate-pulse" /> Apphia Engine
-            </span>
-          </div>
-          <p className="text-slate-500 max-w-2xl text-base leading-relaxed">
-            Direct interface with the Apphia reasoning engine. Ask strategic questions, simulate scenarios, and apply automated operational remedies.
-          </p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Advisory Desk</h1>
+          <p className="text-slate-500 mt-1">Direct interface with the Apphia reasoning engine for strategic guidance.</p>
+        </div>
+        <div className="flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-bold border border-indigo-100">
+          <Cpu size={14} className="animate-pulse" />
+          APPHIA ENGINE ONLINE
         </div>
       </header>
 
-      <div className="flex-1 bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex flex-col relative">
+      <div className="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col relative min-h-0">
         {/* Chat Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth">
           {messages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+              <div className={`max-w-[85%] flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                 
                 {/* Avatar */}
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-                  msg.role === 'user' ? 'bg-slate-900 text-white' : 'bg-teal-100 text-teal-700 border border-teal-200'
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
+                  msg.role === 'user' ? 'bg-slate-900 text-white' : 'bg-indigo-600 text-white'
                 }`}>
-                  {msg.role === 'user' ? <span className="font-medium text-sm">EX</span> : <Cpu size={20} />}
+                  {msg.role === 'user' ? <span className="font-bold text-xs tracking-tighter">EXEC</span> : <Cpu size={20} />}
                 </div>
 
                 {/* Message Bubble */}
                 <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-medium text-slate-500">{msg.role === 'user' ? 'Executive' : 'Apphia Engine'}</span>
-                    <span className="text-xs text-slate-400">{msg.timestamp}</span>
+                  <div className="flex items-center gap-2 mb-1.5 px-1">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                      {msg.role === 'user' ? 'Executive Command' : 'Apphia Intelligence'}
+                    </span>
+                    <span className="text-[10px] text-slate-300 font-bold">•</span>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{msg.timestamp}</span>
                   </div>
                   
-                  <div className={`p-4 rounded-2xl shadow-sm ${
+                  <div className={`p-4 rounded-2xl shadow-sm border ${
                     msg.role === 'user' 
-                      ? 'bg-slate-900 text-white rounded-tr-none' 
-                      : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none'
+                      ? 'bg-slate-900 text-white border-slate-800 rounded-tr-none' 
+                      : 'bg-slate-50 border-slate-100 text-slate-800 rounded-tl-none'
                   }`}>
-                    <div className="prose prose-sm max-w-none whitespace-pre-wrap">
+                    <div className="prose prose-sm max-w-none whitespace-pre-wrap leading-relaxed font-medium text-sm">
                       {msg.content}
                     </div>
                   </div>
 
                   {/* Recommendation Card */}
                   {msg.recommendation && (
-                    <div className="mt-3 w-full max-w-md bg-white border-2 border-teal-500/20 rounded-xl p-4 shadow-sm relative overflow-hidden">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-teal-500"></div>
-                      <div className="flex items-start gap-3 mb-3">
-                        <Zap size={18} className="text-teal-600 shrink-0 mt-0.5" />
+                    <div className="mt-4 w-full max-w-md bg-white border border-indigo-100 rounded-xl p-5 shadow-md relative overflow-hidden group">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600"></div>
+                      <div className="flex items-start gap-3 mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                          <Zap size={16} className="text-indigo-600" />
+                        </div>
                         <div>
-                          <h4 className="font-semibold text-slate-900 text-sm">Recommended Action</h4>
-                          <p className="text-slate-700 text-sm mt-1">{msg.recommendation.action}</p>
+                          <h4 className="font-bold text-slate-900 text-sm tracking-tight">Strategic Recommendation</h4>
+                          <p className="text-slate-600 text-xs mt-1 font-medium leading-relaxed">{msg.recommendation.action}</p>
                         </div>
                       </div>
-                      <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-4">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 block">Predicted Impact</span>
-                        <p className="text-xs text-slate-600">{msg.recommendation.impact}</p>
+                      
+                      <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-5">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5 block">Projected Impact</span>
+                        <p className="text-xs text-slate-700 font-bold leading-relaxed">{msg.recommendation.impact}</p>
                       </div>
                       
                       {msg.recommendation.applied ? (
-                        <div className="flex items-center justify-center gap-2 w-full py-2 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200 text-sm font-medium">
-                          <CheckCircle2 size={16} /> Action Applied
+                        <div className="flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-100 text-xs font-bold uppercase tracking-widest">
+                          <CheckCircle2 size={14} /> Action Deployed
                         </div>
                       ) : (
                         <button 
                           onClick={() => handleApply(msg.id)}
-                          className="flex items-center justify-center gap-2 w-full py-2 bg-slate-900 text-white hover:bg-slate-800 rounded-lg transition-colors text-sm font-medium shadow-sm"
+                          className="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition-all text-xs font-bold uppercase tracking-widest shadow-sm active:scale-[0.98]"
                         >
-                          Apply Recommendation <ArrowRight size={16} />
+                          Deploy Remedy <ArrowRight size={14} />
                         </button>
                       )}
                     </div>
@@ -219,13 +220,13 @@ export function AdvisoryDeskView() {
           {isTyping && (
             <div className="flex justify-start">
               <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-teal-100 text-teal-700 border border-teal-200 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                   <Cpu size={20} className="animate-pulse" />
                 </div>
-                <div className="bg-white border border-slate-200 p-4 rounded-2xl rounded-tl-none shadow-sm flex items-center gap-2">
-                  <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                  <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                  <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl rounded-tl-none shadow-sm flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                 </div>
               </div>
             </div>
@@ -233,33 +234,33 @@ export function AdvisoryDeskView() {
         </div>
 
         {/* Input Area */}
-        <div className="p-4 bg-white border-t border-slate-200">
+        <div className="p-6 bg-white border-t border-slate-100">
           <div className="relative flex items-center">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask Apphia a strategic question... (e.g., 'What happens if we delay the Q3 launch?')"
-              className="w-full pl-4 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all text-slate-900 placeholder:text-slate-400"
+              placeholder="Query Apphia Engine... (e.g., 'Analyze Q3 delivery risks')"
+              className="w-full pl-5 pr-14 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-slate-900 placeholder:text-slate-400 font-medium text-sm"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim() || isTyping}
-              className="absolute right-2 p-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50 disabled:hover:bg-slate-900 transition-colors"
+              className="absolute right-2 p-2.5 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-30 transition-all active:scale-95"
             >
               <Send size={18} />
             </button>
           </div>
-          <div className="mt-2 flex gap-2 overflow-x-auto no-scrollbar pb-1">
-            <button onClick={() => setInput("What is the current bottleneck in Engineering?")} className="shrink-0 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs rounded-full transition-colors border border-slate-200">
+          <div className="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            <button onClick={() => setInput("Identify current operational bottlenecks")} className="shrink-0 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors border border-slate-200">
               Identify Bottlenecks
             </button>
-            <button onClick={() => setInput("Simulate a 10% budget cut across all departments.")} className="shrink-0 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs rounded-full transition-colors border border-slate-200">
-              Simulate Budget Cut
+            <button onClick={() => setInput("Simulate 15% capacity reduction")} className="shrink-0 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors border border-slate-200">
+              Capacity Simulation
             </button>
-            <button onClick={() => setInput("Which initiatives are at risk of missing their Q3 deadlines?")} className="shrink-0 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs rounded-full transition-colors border border-slate-200">
-              Show At-Risk Initiatives
+            <button onClick={() => setInput("List all high-risk initiatives")} className="shrink-0 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-colors border border-slate-200">
+              Risk Assessment
             </button>
           </div>
         </div>

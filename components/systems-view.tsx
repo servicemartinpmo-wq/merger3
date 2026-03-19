@@ -68,18 +68,18 @@ export function SystemsView() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-showroom-accent" />
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-10 bg-slate-900 p-8 min-h-screen">
+    <div className="space-y-12 max-w-7xl mx-auto">
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div className="space-y-4">
-          <h1 className="text-4xl font-display text-white tracking-tight">PMO-Ops Command Center</h1>
-          <p className="text-slate-400 max-w-2xl text-lg leading-relaxed">
-            25 Core AI Systems powering the Venture-OS Command Engine.
+          <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Core Systems</h1>
+          <p className="text-slate-500 max-w-2xl text-lg leading-relaxed font-medium">
+            25 Core AI Systems powering the PMO-Ops Command Engine.
           </p>
         </div>
         
@@ -95,7 +95,7 @@ export function SystemsView() {
                 }));
                 await supabase.from('systems').insert(demoSystems);
               }}
-              className="text-[10px] font-mono uppercase tracking-widest text-showroom-accent hover:underline"
+              className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 px-4 py-2 rounded-lg"
             >
               Sync Core Systems
             </button>
@@ -107,7 +107,7 @@ export function SystemsView() {
               placeholder="Search systems..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 pr-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-white focus:outline-none focus:ring-4 focus:ring-showroom-accent/10 transition-all w-72 glass-reflection"
+              className="pl-12 pr-6 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all w-72 font-medium"
             />
           </div>
         </div>
@@ -117,20 +117,23 @@ export function SystemsView() {
         {filteredSystems.map((system) => (
           <motion.div 
             key={system.id}
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:shadow-2xl hover:shadow-showroom-accent/5 transition-all duration-300 flex flex-col gap-4 glass-reflection group"
+            whileHover={{ y: -4 }}
+            className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col gap-6 group"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-showroom-accent text-black flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.3)]">
-                <Cpu size={20} />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-lg shadow-slate-200 group-hover:bg-indigo-600 transition-colors">
+                <Cpu size={24} />
               </div>
-              <h3 className="text-lg font-medium text-white">{system.name}</h3>
+              <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{system.name}</h3>
             </div>
-            <p className="text-sm text-slate-400 leading-relaxed flex-grow">{system.purpose}</p>
-            <button className="text-xs font-bold uppercase tracking-widest text-showroom-accent flex items-center gap-2 mt-2 group-hover:translate-x-1 transition-transform">
-              View Details <ChevronRight size={14} />
-            </button>
+            <p className="text-sm text-slate-500 leading-relaxed flex-grow font-medium">{system.purpose}</p>
+            <div className="pt-6 border-t border-slate-50">
+              <button className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                View System Specs <ChevronRight size={14} />
+              </button>
+            </div>
           </motion.div>
         ))}
       </div>

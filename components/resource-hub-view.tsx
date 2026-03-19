@@ -73,17 +73,17 @@ export function ResourceHubView() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-showroom-accent" />
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-10 bg-slate-900 p-8 min-h-screen">
+    <div className="space-y-12 max-w-7xl mx-auto">
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div className="space-y-4">
-          <h1 className="text-4xl font-display text-white tracking-tight">Resource Hub</h1>
-          <p className="text-slate-400 max-w-2xl text-lg leading-relaxed">
+          <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Resource Hub</h1>
+          <p className="text-slate-500 max-w-2xl text-lg leading-relaxed font-medium">
             Access templates, pre-built workflows, and SOPs. Filter by department, problem, or diagnostic need.
           </p>
         </div>
@@ -100,7 +100,7 @@ export function ResourceHubView() {
                 ];
                 await supabase.from('resource_hub').insert(demoResources);
               }}
-              className="text-[10px] font-mono uppercase tracking-widest text-showroom-accent hover:underline"
+              className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 px-4 py-2 rounded-lg"
             >
               Seed Demo Data
             </button>
@@ -110,13 +110,13 @@ export function ResourceHubView() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
-                placeholder="Search..." 
+                placeholder="Search resources..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-sm text-white focus:outline-none focus:ring-4 focus:ring-showroom-accent/10 transition-all w-72 glass-reflection"
+                className="pl-12 pr-6 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all w-72 font-medium"
               />
             </div>
-            <button className="p-3 bg-white/5 border border-white/10 rounded-2xl text-slate-400 hover:text-white transition-colors glass-reflection">
+            <button className="p-3 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-slate-900 transition-colors shadow-sm">
               <Filter size={18} />
             </button>
           </div>
@@ -125,23 +125,34 @@ export function ResourceHubView() {
 
       {sections.map((section) => (
         <section key={section.id} className="space-y-6">
-          <h2 className="text-xl font-medium flex items-center gap-3 text-white">
-            <section.icon size={20} className="text-showroom-accent" />
-            {section.title}
-          </h2>
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+              <section.icon size={14} className="text-indigo-600" />
+              {section.title}
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {section.items.map((item: any) => (
               <motion.div 
                 key={item.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="group bg-white/5 border border-white/10 rounded-3xl p-8 hover:shadow-2xl hover:shadow-showroom-accent/5 transition-all duration-300 cursor-pointer glass-reflection"
+                whileHover={{ y: -4 }}
+                className="group bg-white border border-slate-200 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
                 title={item.purpose ? `Purpose: ${item.purpose} | Past Use: ${item.pastUse} | Relevance: ${item.relevance}` : ''}
               >
-                <h3 className="text-lg font-medium mb-2 text-white">{item.name}</h3>
-                <p className="text-xs text-slate-500 mb-4">{item.department} • {item.problem}</p>
-                <button className="text-xs font-bold uppercase tracking-widest text-showroom-accent flex items-center gap-2 group-hover:translate-x-1 transition-transform">
-                  {section.id === 'workflows' ? 'Deploy' : 'Download'} <ArrowRight size={14} />
+                <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                    <section.icon size={20} />
+                  </div>
+                  <div className="p-2 rounded-lg bg-slate-50 text-slate-400 group-hover:text-indigo-600 transition-colors">
+                    <Download size={14} />
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold mb-2 text-slate-900 group-hover:text-indigo-600 transition-colors">{item.name}</h3>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">{item.department} • {item.problem}</p>
+                <button className="text-[10px] font-bold uppercase tracking-widest text-indigo-600 flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                  {section.id === 'workflows' ? 'Deploy Workflow' : 'Download Template'} <ArrowRight size={14} />
                 </button>
               </motion.div>
             ))}

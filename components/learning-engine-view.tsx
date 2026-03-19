@@ -5,19 +5,26 @@ import insightsData from '@/data/learning-engine.json';
 
 export function LearningEngineView() {
   return (
-    <section className="bg-slate-900 border border-white/10 p-8 rounded-3xl shadow-sm text-white min-h-screen">
-      <div className="flex items-center gap-3 mb-6">
-        <BrainCircuit className="text-indigo-600" size={24} />
-        <h2 className="text-xl font-serif">Cross-Company Learning Engine</h2>
-      </div>
-      <div className="space-y-4">
+    <div className="space-y-8 max-w-7xl mx-auto">
+      <header>
+        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Cross-Company Learning Engine</h1>
+        <p className="text-slate-500 mt-1">Aggregated insights and pattern recognition from across the PMO-Ops network.</p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {insightsData.insights.map((insight) => (
-          <div key={insight.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-            <p className="text-sm font-medium text-slate-900">{insight.insight}</p>
-            <p className="text-xs text-slate-500 mt-1">Recommendation: {insight.recommendation}</p>
+          <div key={insight.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-indigo-200 transition-colors group">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center mb-4 group-hover:bg-indigo-100 transition-colors">
+              <BrainCircuit className="text-indigo-600" size={20} />
+            </div>
+            <p className="text-sm font-bold text-slate-900 leading-snug mb-3">{insight.insight}</p>
+            <div className="pt-3 border-t border-slate-100">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Recommendation</p>
+              <p className="text-xs text-slate-600 leading-relaxed">{insight.recommendation}</p>
+            </div>
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

@@ -34,10 +34,13 @@ export class ApphiaObserver {
         // 3. Generate Advisory
         const advisories = await this.kernel.generateAdvisory(diagnoses);
 
-        return { signals, diagnoses, advisories };
+        // 4. Propose Structural Remedies
+        const remedies = await this.kernel.proposeRemedies(advisories);
+
+        return { signals, diagnoses, advisories, remedies };
       }
 
-      return { signals: [], diagnoses: [], advisories: [] };
+      return { signals: [], diagnoses: [], advisories: [], remedies: [] };
     } catch (error) {
       console.error('Observation cycle failed:', error);
       throw error;

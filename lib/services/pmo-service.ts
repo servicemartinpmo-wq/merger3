@@ -1,4 +1,5 @@
 import { dataService } from './data-service';
+import { supabase } from '../supabase';
 
 export interface Initiative {
   id: string;
@@ -10,6 +11,32 @@ export interface Initiative {
   owner_id: string;
   start_date: string;
   end_date: string;
+}
+
+export interface StrategicGoal {
+  id: string;
+  org_id: string;
+  title: string;
+  description: string;
+  target_date: string;
+  status: string;
+}
+
+export interface OperationalMetric {
+  id: string;
+  org_id: string;
+  metric_name: string;
+  value: number;
+  unit: string;
+  recorded_at: string;
+}
+
+export interface AlgorithmScore {
+  id: string;
+  campaign_id: string;
+  score_type: string;
+  score_value: number;
+  calculated_at: string;
 }
 
 export const pmoService = {
@@ -47,8 +74,6 @@ export const pmoService = {
    * Detects dependency bottlenecks.
    */
   async detectBottlenecks(userId: string) {
-    // In a real app, this would query a 'dependencies' table
-    // For now, we simulate based on initiative status
     const initiatives = await dataService.getItems<Initiative>('initiatives', userId);
     const delayed = initiatives.filter(i => i.status === 'delayed');
     
@@ -57,5 +82,36 @@ export const pmoService = {
       name: i.name,
       reason: 'Resource conflict detected in upstream dependency.'
     }));
+  },
+
+  // Strategy
+  async getStrategicGoals(orgId: string) {
+    const { data, error } = await supabase.from('strategic_goals').select('*').eq('org_id', orgId);
+    if (error) throw error;
+    return data as StrategicGoal[];
+  },
+  
+  // Operations
+  async getOperationalMetrics(orgId: string) {
+    const { data, error } = await supabase.from('operational_metrics').select('*').eq('org_id', orgId);
+    if (error) throw error;
+    return data as OperationalMetric[];
+  },
+  
+  // Marketing Intelligence
+  async getAlgorithmScores(campaignId: string) {
+    const { data, error } = await supabase
+      .from('algorithm_scores')
+      .select('*')
+      .eq('campaign_id', campaignId)
+      .order('calculated_at', { ascending: false });
+    if (error) throw error;
+    return data as AlgorithmScore[];
+  },
+  
+  async addAlgorithmSignal(signal: any) {
+    const { data, error } = await supabase.from('algorithm_signals').insert(signal);
+    if (error) throw error;
+    return data;
   }
 };

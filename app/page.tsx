@@ -31,8 +31,12 @@ import { ProfileView } from "@/components/profile-view";
 import { IntegrationsView } from "@/components/integrations-view";
 import { LearningEngineView } from "@/components/learning-engine-view";
 
+import { IndustryModeSwitcher } from "@/components/industry-mode-switcher";
+import { IndustryMode } from "@/lib/types/pmo";
+
 function AppContent() {
   const [assistedMode, setAssistedMode] = useState(false);
+  const [industryMode, setIndustryMode] = useState<IndustryMode>("executive");
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
@@ -40,27 +44,15 @@ function AppContent() {
 
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: HomeIcon },
-    { path: "/tech-ops", label: "Tech Ops", icon: Zap },
-    { path: "/executive-pmo", label: "Executive PMO", icon: BarChart3 },
-    { path: "/marketing-crm", label: "Marketing CRM", icon: Users },
-    { path: "/creative-portfolio", label: "Creative Portfolio", icon: Layout },
-    { path: "/founder-dashboard", label: "Founder Dashboard", icon: Rocket },
-    { path: "/freelance-kanban", label: "Freelance Kanban", icon: Layout },
-    { path: "/systems", label: "Systems", icon: Settings },
-    { path: "/team", label: "Team", icon: Users },
-    { path: "/resource-hub", label: "Resource Hub", icon: Layout },
-    { path: "/workflow-builder", label: "Workflow Builder", icon: Zap },
-    { path: "/quality-control", label: "Quality Control", icon: CheckCircle2 },
-    { path: "/diagnostics", label: "Diagnostics", icon: Sparkles },
     { path: "/initiatives", label: "Initiatives", icon: Rocket },
-    { path: "/advisory-desk", label: "Advisory Desk", icon: Users },
-    { path: "/email-intelligence", label: "Email Intelligence", icon: Zap },
-    { path: "/ops-monitor", label: "Ops Monitor", icon: BarChart3 },
     { path: "/action-items", label: "Action Items", icon: CheckCircle2 },
-    { path: "/plan-engine", label: "Plan Engine", icon: Layout },
-    { path: "/profile", label: "Profile", icon: Users },
-    { path: "/integrations", label: "Integrations", icon: Settings },
-    { path: "/learning-engine", label: "Learning Engine", icon: Sparkles },
+    { path: "/departments", label: "Departments", icon: Users },
+    { path: "/diagnostics", label: "Diagnostics", icon: Sparkles },
+    { path: "/resource-hub", label: "Resource Hub", icon: Layout },
+    { path: "/advisory", label: "Advisory", icon: Users },
+    { path: "/reports", label: "Reports", icon: BarChart3 },
+    { path: "/systems", label: "Systems", icon: Settings },
+    { path: "/integrations", label: "Integrations", icon: Zap },
   ];
 
   if (location.pathname === "/") {
@@ -68,7 +60,7 @@ function AppContent() {
   }
 
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
+    <div className="flex h-screen bg-white overflow-hidden font-sans">
       {/* Sidebar */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -76,19 +68,22 @@ function AppContent() {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 256, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            className="h-full bg-slate-900 border-r border-white/10 flex flex-col overflow-hidden shrink-0"
+            className="h-full bg-slate-900 flex flex-col overflow-hidden shrink-0"
           >
-            <div className="p-4 border-b border-white/10 flex items-center justify-between">
-              <span className="font-bold text-lg text-white flex items-center gap-2">
-                <Image 
-                  src="https://drive.google.com/uc?id=18b3DTRptB-KV75a8ukiUJGw19f_2CB_k" 
-                  alt="Venture-OS Logo" 
-                  width={24} 
-                  height={24} 
-                  className="rounded-sm"
-                  referrerPolicy="no-referrer"
-                />
-                Venture-OS
+            <div className="p-6 border-b border-white/10 flex items-center justify-between">
+              <span className="font-bold text-lg text-white flex flex-col">
+                <span className="text-xs text-slate-400 uppercase tracking-widest mb-1">Command Center</span>
+                <span className="flex items-center gap-2">
+                  <Image 
+                    src="https://drive.google.com/uc?id=18b3DTRptB-KV75a8ukiUJGw19f_2CB_k" 
+                    alt="Martin PMO Logo" 
+                    width={24} 
+                    height={24} 
+                    className="rounded-sm"
+                    referrerPolicy="no-referrer"
+                  />
+                  Martin PMO
+                </span>
               </span>
               <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-slate-400 hover:text-white">
                 <X className="w-5 h-5" />
@@ -101,71 +96,79 @@ function AppContent() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                       isActive
-                        ? "bg-showroom-accent/10 text-showroom-accent"
+                        ? "bg-sky-500 text-white shadow-lg shadow-sky-500/20"
                         : "text-slate-400 hover:bg-white/5 hover:text-white"
                     }`}
                   >
-                    <item.icon className={`w-4 h-4 ${isActive ? "text-showroom-accent" : "text-slate-400"}`} />
+                    <item.icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-400"}`} />
                     {item.label}
                   </Link>
                 );
               })}
             </nav>
+            <div className="p-4 border-t border-white/10 space-y-4">
+              <IndustryModeSwitcher currentMode={industryMode} onModeChange={setIndustryMode} />
+              <button 
+                onClick={() => navigate("/profile")}
+                className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
+              >
+                <div className="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white font-bold">
+                  M
+                </div>
+                <div className="flex flex-col items-start overflow-hidden">
+                  <span className="truncate w-full">Martin PMO</span>
+                  <span className="text-[10px] text-slate-500 uppercase">Executive Tier</span>
+                </div>
+              </button>
+            </div>
           </motion.aside>
         )}
       </AnimatePresence>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-900">
-        <header className="h-16 bg-slate-900 border-b border-white/10 flex items-center px-4 justify-between shrink-0">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-50">
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6 justify-between shrink-0">
           <div className="flex items-center gap-4">
             {!isSidebarOpen && (
-              <button onClick={() => setIsSidebarOpen(true)} className="text-slate-400 hover:text-white">
-                <Menu className="w-5 h-5" />
+              <button onClick={() => setIsSidebarOpen(true)} className="text-slate-500 hover:text-slate-900 transition-colors">
+                <Menu className="w-6 h-6" />
               </button>
             )}
-            <h1 className="text-lg font-semibold text-white">
-              {navItems.find((item) => item.path === location.pathname)?.label || "Venture-OS"}
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+              {navItems.find((item) => item.path === location.pathname)?.label || "Command Center"}
             </h1>
           </div>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-slate-400 cursor-pointer">
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-100">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              SYSTEM ACTIVE
+            </div>
+            <label className="flex items-center gap-2 text-sm text-slate-500 font-medium cursor-pointer hover:text-slate-900 transition-colors">
               <input
                 type="checkbox"
                 checked={assistedMode}
                 onChange={(e) => setAssistedMode(e.target.checked)}
-                className="rounded border-white/20 bg-white/5 text-showroom-accent focus:ring-showroom-accent"
+                className="rounded border-slate-300 bg-white text-sky-600 focus:ring-sky-500"
               />
               Assisted Mode
             </label>
           </div>
         </header>
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-8">
           <Routes>
             <Route path="/dashboard" element={<DashboardView assistedMode={assistedMode} />} />
-            <Route path="/tech-ops" element={<TechOpsView />} />
-            <Route path="/executive-pmo" element={<ExecutivePmoView />} />
-            <Route path="/marketing-crm" element={<MarketingCrmView />} />
-            <Route path="/creative-portfolio" element={<CreativePortfolioView />} />
-            <Route path="/founder-dashboard" element={<FounderDashboardView />} />
-            <Route path="/freelance-kanban" element={<FreelanceKanbanView />} />
-            <Route path="/systems" element={<SystemsView />} />
-            <Route path="/team" element={<TeamPageView />} />
-            <Route path="/resource-hub" element={<ResourceHubView />} />
-            <Route path="/workflow-builder" element={<WorkflowBuilderView />} />
-            <Route path="/quality-control" element={<QualityControlView />} />
-            <Route path="/diagnostics" element={<DiagnosticsView />} />
             <Route path="/initiatives" element={<InitiativesView />} />
-            <Route path="/advisory-desk" element={<AdvisoryDeskView />} />
-            <Route path="/email-intelligence" element={<EmailIntelligenceView selectedEmailId={selectedEmailId} setSelectedEmailId={setSelectedEmailId} />} />
-            <Route path="/ops-monitor" element={<OpsMonitorView />} />
             <Route path="/action-items" element={<ActionItemsView setView={(view: string) => navigate(`/${view}`)} setSelectedEmailId={setSelectedEmailId} />} />
-            <Route path="/plan-engine" element={<PlanEngineView />} />
-            <Route path="/profile" element={<ProfileView />} />
+            <Route path="/departments" element={<TeamPageView />} />
+            <Route path="/diagnostics" element={<DiagnosticsView />} />
+            <Route path="/resource-hub" element={<ResourceHubView />} />
+            <Route path="/advisory" element={<AdvisoryDeskView />} />
+            <Route path="/reports" element={<LearningEngineView />} />
+            <Route path="/systems" element={<SystemsView />} />
             <Route path="/integrations" element={<IntegrationsView />} />
-            <Route path="/learning-engine" element={<LearningEngineView />} />
+            <Route path="/profile" element={<ProfileView />} />
           </Routes>
         </div>
       </main>

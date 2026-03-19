@@ -34,8 +34,20 @@ export function useApphia() {
 
       // Also check system health via Guard
       const unifiedView = await bridge.getUnifiedView(user.id);
+      
+      const initiatives = unifiedView.coreEntities.initiatives || [];
+      const teamMembers = unifiedView.coreEntities.teamMembers || [];
+      
+      // Calculate capacity score: 
+      // 1.0 = Full capacity (or over)
+      // 0.0 = No load
+      // Logic: Each team member can handle ~3 initiatives at once.
+      const totalCapacity = teamMembers.length * 3;
+      const activeInitiatives = initiatives.filter((i: any) => i.status !== 'completed').length;
+      const capacityScore = totalCapacity > 0 ? Math.min(1, activeInitiatives / totalCapacity) : 0.5;
+
       const healthProtocols = await guard.checkSystemHealth({
-        capacityScore: 0.5 // Placeholder for real capacity calculation
+        capacityScore
       });
       setProtocols(healthProtocols);
 
