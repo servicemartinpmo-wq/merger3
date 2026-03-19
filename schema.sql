@@ -103,3 +103,38 @@ CREATE TRIGGER update_kb_modtime
     BEFORE UPDATE ON knowledge_base
     FOR EACH ROW
     EXECUTE PROCEDURE update_modified_column();
+
+-- ==========================================
+-- 🤖 AI-ONLY TECH SUPPORT MANUAL (LEAN DB)
+-- ==========================================
+
+-- 9. Cases Table (Lean Tickets)
+CREATE TABLE cases (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_message TEXT NOT NULL,
+  ai_summary TEXT,
+  severity TEXT DEFAULT 'low',
+  status TEXT DEFAULT 'open',
+  confidence_score NUMERIC(5, 2),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 10. Actions Table
+CREATE TABLE actions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
+  action_type TEXT NOT NULL, -- 'suggested', 'auto', 'escalated'
+  description TEXT NOT NULL,
+  approved BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 11. Escalations Table
+CREATE TABLE escalations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
+  reason TEXT NOT NULL,
+  ai_recommendation TEXT,
+  human_decision TEXT, -- 'approved', 'rejected', 're-analyze'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);

@@ -1,6 +1,6 @@
 import { Sidebar } from '@/components/Sidebar';
 
-export default function TechOpsLayout({
+export default function EscalationsLayout({
   children,
 }: {
   children: React.ReactNode;

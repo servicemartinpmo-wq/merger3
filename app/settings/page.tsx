@@ -29,13 +29,35 @@ export default function SettingsPage() {
         <section className="p-6 rounded-2xl bg-slate-900 border border-slate-800">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Key className="w-5 h-5 text-indigo-400" />
-            API Keys
+            AI Model Providers
           </h2>
+          <p className="text-sm text-slate-400 mb-4">Configure multiple AI providers to combine their strengths for intake, diagnosis, and resolution.</p>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1">OpenAI API Key</label>
+              <label className="block text-sm font-medium text-slate-400 mb-1">OpenAI API Key (ChatGPT)</label>
               <input type="password" defaultValue="sk-..." className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-1">Anthropic API Key (Claude)</label>
+              <input type="password" defaultValue="sk-ant-..." className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-1">Google Gemini API Key</label>
+              <input type="password" defaultValue="AIza..." className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-1">DeepSeek API Key</label>
+              <input type="password" defaultValue="sk-deepseek-..." className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            </div>
+          </div>
+        </section>
+
+        <section className="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Database className="w-5 h-5 text-indigo-400" />
+            Supabase Configuration
+          </h2>
+          <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-slate-400 mb-1">Supabase URL</label>
               <input type="text" defaultValue="https://xyzcompany.supabase.co" className="w-full px-4 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
