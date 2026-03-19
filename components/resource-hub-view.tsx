@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, BookOpen, GitMerge, FileText, ArrowRight, Download, Loader2, Plus } from 'lucide-react';
+import { Search, Filter, BookOpen, GitMerge, FileText, ArrowRight, Download, Loader2, Plus, Library } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useSupabase } from '@/components/supabase-provider';
 import { dataService } from '@/lib/services/data-service';
 import resourceData from '@/data/resource-hub-data.json';
+import { useNavigate } from 'react-router-dom';
 
 export function ResourceHubView() {
+  const navigate = useNavigate();
   const { user } = useSupabase();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
@@ -122,6 +124,41 @@ export function ResourceHubView() {
           </div>
         </div>
       </header>
+
+      {/* Knowledge Superbase Highlight */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-indigo-600 rounded-3xl p-10 text-white flex flex-col lg:flex-row items-center justify-between gap-12 shadow-2xl shadow-indigo-200 overflow-hidden relative group cursor-pointer"
+        onClick={() => navigate('/canon')}
+      >
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl group-hover:bg-white/20 transition-all duration-700" />
+        <div className="relative z-10 space-y-6 max-w-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-xs font-bold uppercase tracking-widest border border-white/20">
+            <Library size={14} /> Knowledge Superbase
+          </div>
+          <h2 className="text-4xl font-bold tracking-tight">Management Canon Library</h2>
+          <p className="text-indigo-100 text-lg leading-relaxed font-medium">
+            Access the structured knowledge base of 50+ foundational management texts, strategic frameworks, and diagnostic models.
+          </p>
+          <button className="px-8 py-4 bg-white text-indigo-600 rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-lg flex items-center gap-3">
+            Explore the Canon <ArrowRight size={18} />
+          </button>
+        </div>
+        <div className="relative z-10 grid grid-cols-2 gap-4 w-full lg:w-auto">
+          {[
+            { label: 'Strategy', count: '12 Books' },
+            { label: 'Operations', count: '8 Books' },
+            { label: 'Leadership', count: '10 Books' },
+            { label: 'Systems', count: '6 Books' }
+          ].map((stat) => (
+            <div key={stat.label} className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-center">
+              <div className="text-2xl font-bold mb-1">{stat.count}</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-indigo-200">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
 
       {sections.map((section) => (
         <section key={section.id} className="space-y-6">

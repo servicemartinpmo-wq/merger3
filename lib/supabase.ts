@@ -3,15 +3,27 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-// Only initialize if we have the required configuration
-// Using a placeholder URL if missing to prevent immediate crash, but logging a warning
-const clientUrl = supabaseUrl || 'https://placeholder.supabase.co';
-const clientKey = supabaseAnonKey || 'placeholder';
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  if (typeof window !== 'undefined') {
-    console.warn('Supabase configuration is missing. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.');
-  }
-}
+// Helper types based on the schema
+export type Ticket = {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  created_at: string;
+  updated_at: string;
+  resolved_at?: string;
+};
 
-export const supabase = createClient(clientUrl, clientKey);
+export type AIDiagnostic = {
+  id: string;
+  ticket_id: string;
+  ai_agent_name: string;
+  analysis_result: any;
+  confidence_score: number;
+  recommended_action: string;
+  created_at: string;
+};

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, AlertTriangle, CheckCircle2, FileText, Upload, Brain, Loader2, Plus } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle2, FileText, Upload, Brain, Loader2, Plus, Zap } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import { statusConfig } from '@/lib/status-colors';
 import { supabase } from '@/lib/supabase';
