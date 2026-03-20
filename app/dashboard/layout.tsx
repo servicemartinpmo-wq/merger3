@@ -14,17 +14,23 @@ import {
   Menu,
   X,
   Bell,
-  Search
+  Search,
+  AlertTriangle,
+  Ticket,
+  FileText,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 const SIDEBAR_ITEMS = [
   { icon: LayoutDashboard, label: 'Overview', href: '/dashboard' },
-  { icon: FolderKanban, label: 'Projects', href: '/dashboard/projects' },
-  { icon: Users, label: 'Team', href: '/dashboard/team' },
-  { icon: Activity, label: 'Analytics', href: '/dashboard/analytics' },
-  { icon: Shield, label: 'Security', href: '/dashboard/security' },
+  { icon: AlertTriangle, label: 'Escalations', href: '/dashboard/escalations' },
+  { icon: Ticket, label: 'Tickets', href: '/dashboard/tickets' },
+  { icon: Shield, label: 'AI Diagnostics', href: '/dashboard/diagnostics' },
+  { icon: FileText, label: 'Knowledge Base', href: '/dashboard/knowledge' },
+  { icon: BookOpen, label: 'Tech-Ops Playbook', href: '/dashboard/tech-ops' },
+  { icon: Zap, label: 'Workflows', href: '/dashboard/workflows' },
   { icon: Settings, label: 'Settings', href: '/dashboard/settings' },
 ];
 
